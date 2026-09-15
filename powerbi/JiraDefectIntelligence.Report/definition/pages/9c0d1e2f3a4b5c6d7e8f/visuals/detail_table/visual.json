@@ -1,0 +1,88 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "detail_table",
+  "position": {
+    "x": 32,
+    "y": 208,
+    "z": 1300,
+    "height": 720,
+    "width": 1856,
+    "tabOrder": 30
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {"Column": {"Expression": {"SourceRef": {"Entity": "FactDefects"}}, "Property": "IssueKey"}},
+              "queryRef": "FactDefects.IssueKey",
+              "nativeQueryRef": "IssueKey"
+            },
+            {
+              "field": {"Column": {"Expression": {"SourceRef": {"Entity": "FactDefects"}}, "Property": "ProjectName"}},
+              "queryRef": "FactDefects.ProjectName",
+              "nativeQueryRef": "ProjectName"
+            },
+            {
+              "field": {"Column": {"Expression": {"SourceRef": {"Entity": "FactDefects"}}, "Property": "Priority"}},
+              "queryRef": "FactDefects.Priority",
+              "nativeQueryRef": "Priority"
+            },
+            {
+              "field": {"Column": {"Expression": {"SourceRef": {"Entity": "FactDefects"}}, "Property": "Status"}},
+              "queryRef": "FactDefects.Status",
+              "nativeQueryRef": "Status"
+            },
+            {
+              "field": {"Column": {"Expression": {"SourceRef": {"Entity": "FactDefects"}}, "Property": "Summary"}},
+              "queryRef": "FactDefects.Summary",
+              "nativeQueryRef": "Summary"
+            },
+            {
+              "field": {"Column": {"Expression": {"SourceRef": {"Entity": "FactDefects"}}, "Property": "Assignee"}},
+              "queryRef": "FactDefects.Assignee",
+              "nativeQueryRef": "Assignee"
+            },
+            {
+              "field": {"Column": {"Expression": {"SourceRef": {"Entity": "FactDefects"}}, "Property": "AgeDays"}},
+              "queryRef": "FactDefects.AgeDays",
+              "nativeQueryRef": "AgeDays"
+            },
+            {
+              "field": {"Column": {"Expression": {"SourceRef": {"Entity": "FactDefects"}}, "Property": "CustomerImpact"}},
+              "queryRef": "FactDefects.CustomerImpact",
+              "nativeQueryRef": "CustomerImpact"
+            },
+            {
+              "field": {"Column": {"Expression": {"SourceRef": {"Entity": "FactDefects"}}, "Property": "SLABreached"}},
+              "queryRef": "FactDefects.SLABreached",
+              "nativeQueryRef": "SLABreached"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "columnHeaders": [
+        {
+          "properties": {
+            "columnAdjustment": {"expr": {"Literal": {"Value": "'growToFit'"}}},
+            "autoSizeColumnWidth": {"expr": {"Literal": {"Value": "true"}}}
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {"expr": {"Literal": {"Value": "true"}}},
+            "text": {"expr": {"Literal": {"Value": "'Defect Detail'"}}}
+          }
+        }
+      ]
+    }
+  }
+}
