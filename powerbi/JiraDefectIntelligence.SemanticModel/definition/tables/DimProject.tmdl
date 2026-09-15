@@ -1,0 +1,47 @@
+table DimProject
+	lineageTag: e5df3967-85aa-4f9a-a046-64e3af8ac664
+
+	column Column1
+		dataType: string
+		lineageTag: 8412bc04-0ef3-4baa-a850-37f117fc21f1
+		summarizeBy: none
+		sourceColumn: Column1
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column2
+		dataType: string
+		lineageTag: 1c9027da-bd6f-4b40-a0c8-f67097224f52
+		summarizeBy: none
+		sourceColumn: Column2
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column3
+		dataType: string
+		lineageTag: aa78a663-4906-4cf4-acdd-8049170430b0
+		summarizeBy: none
+		sourceColumn: Column3
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column4
+		dataType: string
+		lineageTag: 2026807f-eee4-4ee7-8f57-a6015e7a0d61
+		summarizeBy: none
+		sourceColumn: Column4
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimProject = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("C:\work\DQ\pbi\data\power_bi_jira_defect_test_data.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "DimProject", Kind = "Sheet"]}[Data],
+				  #"Changed column type" = Table.TransformColumnTypes(#"Navigation 1", {{"Column1", type text}, {"Column2", type text}, {"Column3", type text}, {"Column4", type text}})
+				in
+				  #"Changed column type"
+
+	annotation PBI_ResultType = Table
+

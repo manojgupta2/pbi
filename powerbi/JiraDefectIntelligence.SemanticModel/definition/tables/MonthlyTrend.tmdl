@@ -1,0 +1,49 @@
+table MonthlyTrend
+	lineageTag: 7fff6cca-51b2-46c3-9a8e-27338b0f62d4
+
+	column CreatedMonth
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 49d6ff94-3e7c-41cf-8de1-5f48307f5bcb
+		summarizeBy: none
+		sourceColumn: CreatedMonth
+
+		variation Variation
+			isDefault
+			relationship: 3b53fe06-4f51-4e3c-a5f0-02c80514bb16
+			defaultHierarchy: LocalDateTable_d14e01c6-6a15-4e61-bd45-64a785e0a811.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Priority
+		dataType: string
+		lineageTag: f6ebdd46-19fb-4ea2-87d6-082151294087
+		summarizeBy: none
+		sourceColumn: Priority
+
+		annotation SummarizationSetBy = Automatic
+
+	column DefectCount
+		dataType: int64
+		formatString: 0
+		lineageTag: c0cc5848-9ccc-430c-b7aa-ed0942301cc0
+		summarizeBy: sum
+		sourceColumn: DefectCount
+
+		annotation SummarizationSetBy = Automatic
+
+	partition MonthlyTrend = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("C:\work\DQ\pbi\data\power_bi_jira_defect_test_data.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "MonthlyTrend", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"CreatedMonth", type date}, {"Priority", type text}, {"DefectCount", Int64.Type}})
+				in
+				  #"Changed column type"
+
+	annotation PBI_ResultType = Table
+

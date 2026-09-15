@@ -1,0 +1,42 @@
+table DimPriority
+	lineageTag: 2db43e7e-59c6-4f9e-9c87-2571f71bbcde
+
+	column Priority
+		dataType: string
+		lineageTag: 3e578dd1-9e8e-4979-afeb-fc1ddb159008
+		summarizeBy: none
+		sourceColumn: Priority
+
+		annotation SummarizationSetBy = Automatic
+
+	column SeverityRank
+		dataType: int64
+		formatString: 0
+		lineageTag: e3900d3c-f62b-4e0d-876b-b03690e86fa3
+		summarizeBy: sum
+		sourceColumn: SeverityRank
+
+		annotation SummarizationSetBy = Automatic
+
+	column SLATargetDays
+		dataType: int64
+		formatString: 0
+		lineageTag: d322fd77-3d8c-40f6-8bc6-cf92aaccd470
+		summarizeBy: sum
+		sourceColumn: SLATargetDays
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimPriority = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("C:\work\DQ\pbi\data\power_bi_jira_defect_test_data.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "DimPriority", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"Priority", type text}, {"SeverityRank", Int64.Type}, {"SLATargetDays", Int64.Type}})
+				in
+				  #"Changed column type"
+
+	annotation PBI_ResultType = Table
+
