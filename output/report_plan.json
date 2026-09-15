@@ -1,0 +1,63 @@
+{
+  "target_audience": [
+    "Engineering leadership",
+    "QA leads",
+    "Project managers",
+    "Defect triage owners"
+  ],
+  "business_questions": [
+    "How large is the current defect backlog?",
+    "How many defects are open versus closed?",
+    "Which priorities and statuses are driving risk?",
+    "Which projects are contributing most defects?",
+    "How many defects breach SLA and impact customers?",
+    "What is the monthly creation trend?",
+    "Which defects need immediate triage?"
+  ],
+  "pages": [
+    {
+      "page_id": "p1_exec",
+      "title": "Executive Defect Health",
+      "purpose": "Executive summary of backlog, risk, trend, and priority concentration",
+      "navigation": "Default landing page",
+      "slicers": ["Project", "Priority", "Status", "CreatedDate"],
+      "visual_strategy": "Priority KPI cards and a single trend line"
+    },
+    {
+      "page_id": "p2_risk",
+      "title": "Backlog and SLA Risk",
+      "purpose": "Focus on exposure, aging, and customer-impact risk",
+      "navigation": "Next page from executive",
+      "slicers": ["Project", "Priority", "CustomerImpact", "Status"],
+      "visual_strategy": "Bar chart for open defects by priority and SLA exposure"
+    },
+    {
+      "page_id": "p3_trend",
+      "title": "Trend and Mix",
+      "purpose": "Track creation patterns and defect mix over time",
+      "navigation": "Next page from risk",
+      "slicers": ["Project", "Priority", "Component", "Environment"],
+      "visual_strategy": "Time trend and mix composition"
+    },
+    {
+      "page_id": "p4_detail",
+      "title": "Defect Detail",
+      "purpose": "Operational drill-down and issue-level investigation",
+      "navigation": "Last page",
+      "slicers": ["Project", "Priority", "Status", "Assignee"],
+      "visual_strategy": "Detailed issue table with drill-through"
+    }
+  ],
+  "drillthrough": [
+    {
+      "from": "p1_exec",
+      "to": "p4_detail",
+      "filters": ["Project", "Priority", "Status"]
+    }
+  ],
+  "tooltip_strategy": [
+    "Use tooltips only for issue count, project concentration, and risk details where drill-through is not necessary."
+  ],
+  "visual_strategy": "Keep the report executive-first: KPI cards, trend, risk exceptions, comparison, and a single detail table. Avoid generic charts for every categorical field.",
+  "design_rule": "Do not create a chart for every available column. Prioritize executive KPIs, trends, risk exceptions, and actionable comparisons."
+}

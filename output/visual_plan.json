@@ -1,0 +1,83 @@
+{
+  "visuals": [
+    {
+      "page": "p1_exec",
+      "visual_id": "kpi_total",
+      "visual_type": "Card",
+      "title": "Total Defects",
+      "measure": "Total Defects",
+      "position": "Top-left KPI card",
+      "purpose": "Current defect volume",
+      "acceptance_criteria": "Matches distinct IssueKey count from source."
+    },
+    {
+      "page": "p1_exec",
+      "visual_id": "kpi_open",
+      "visual_type": "Card",
+      "title": "Open Defects",
+      "measure": "Open Defects",
+      "position": "Top-center KPI card",
+      "purpose": "Current backlog",
+      "acceptance_criteria": "Matches SUM(OpenFlag) source logic."
+    },
+    {
+      "page": "p1_exec",
+      "visual_id": "kpi_closed",
+      "visual_type": "Card",
+      "title": "Closed Defects",
+      "measure": "Closed Defects",
+      "position": "Top-right KPI card",
+      "purpose": "Resolved volume",
+      "acceptance_criteria": "Matches SUM(ClosedFlag) source logic."
+    },
+    {
+      "page": "p1_exec",
+      "visual_id": "trend_monthly",
+      "visual_type": "Line chart",
+      "title": "Defects Created by Month",
+      "x_axis": "DimDate[Date]",
+      "y_axis": "Total Defects",
+      "purpose": "Track defect creation trend",
+      "acceptance_criteria": "Linked to monthly trend with no double counting."
+    },
+    {
+      "page": "p2_risk",
+      "visual_id": "risk_priority",
+      "visual_type": "Bar chart",
+      "title": "Open Defects by Priority",
+      "x_axis": "DimPriority[Priority]",
+      "y_axis": "Open Defects",
+      "purpose": "Show risk concentration by priority",
+      "acceptance_criteria": "Priority distribution aligns with issue counts."
+    },
+    {
+      "page": "p2_risk",
+      "visual_id": "risk_sla",
+      "visual_type": "Bar chart",
+      "title": "SLA Breach Exposure",
+      "x_axis": "FactDefects[SLABreached]",
+      "y_axis": "Open Defects",
+      "purpose": "Expose SLA breach risk",
+      "acceptance_criteria": "Counts reflect Yes/No values in the source data."
+    },
+    {
+      "page": "p3_trend",
+      "visual_id": "mix_priority",
+      "visual_type": "Stacked bar",
+      "title": "Defect Mix by Priority",
+      "x_axis": "DimPriority[Priority]",
+      "y_axis": "Total Defects",
+      "purpose": "Show priority mix across the backlog",
+      "acceptance_criteria": "Matches source distribution by priority."
+    },
+    {
+      "page": "p4_detail",
+      "visual_id": "detail_table",
+      "visual_type": "Table",
+      "title": "Defect Detail",
+      "fields": ["IssueKey", "ProjectName", "Priority", "Status", "Summary", "Assignee", "AgeDays", "CustomerImpact", "SLABreached"],
+      "purpose": "Operational investigation and triage",
+      "acceptance_criteria": "Shows issue rows without duplication and supports filtering."
+    }
+  ]
+}

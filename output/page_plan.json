@@ -1,0 +1,36 @@
+{
+  "pages": [
+    {
+      "page_id": "p1_exec",
+      "title": "Executive Defect Health",
+      "purpose": "Leadership summary of backlog, risk, and trend direction",
+      "layout": "Top KPI row, large trend visual, right-side risk summary",
+      "slicers": ["Project", "Priority", "Status", "CreatedDate"],
+      "acceptance_criteria": "Page should answer: how large is the backlog, how much is open, and what is the trend."
+    },
+    {
+      "page_id": "p2_risk",
+      "title": "Backlog and SLA Risk",
+      "purpose": "Reveal risk concentration by priority, SLA breach, and customer impact",
+      "layout": "Two risk charts and one matrix or table",
+      "slicers": ["Project", "Priority", "CustomerImpact", "Status"],
+      "acceptance_criteria": "Page should highlight the highest-risk issues and populations needing intervention."
+    },
+    {
+      "page_id": "p3_trend",
+      "title": "Trend and Mix",
+      "purpose": "Show defect creation patterns and issue mix by priority and area",
+      "layout": "Line chart plus stacked or grouped mix chart",
+      "slicers": ["Project", "Priority", "Component", "Environment"],
+      "acceptance_criteria": "Page should show whether trend and mix are stable or deteriorating over time."
+    },
+    {
+      "page_id": "p4_detail",
+      "title": "Defect Detail",
+      "purpose": "Issue-level investigation and triage support",
+      "layout": "Full-page table with searchable fields",
+      "slicers": ["Project", "Priority", "Status", "Assignee"],
+      "acceptance_criteria": "Page should support operational drill-through without overwhelming the executive audience."
+    }
+  ]
+}

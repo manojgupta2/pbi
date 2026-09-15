@@ -1,0 +1,36 @@
+{
+  "theme_name": "Executive defect operations",
+  "base_theme": "Fluent 2 / neutral executive palette",
+  "color_palette": {
+    "primary": "#1F4E79",
+    "secondary": "#2F75B5",
+    "accent": "#D9EAF7",
+    "positive": "#2E7D32",
+    "warning": "#EDB200",
+    "critical": "#C00000",
+    "background": "#F5F7FA",
+    "surface": "#FFFFFF",
+    "text": "#1F1F1F"
+  },
+  "typography": {
+    "title": "Segoe UI Semibold",
+    "body": "Segoe UI",
+    "caption": "Segoe UI Semibold"
+  },
+  "kpi_style": {
+    "card_background": "surface",
+    "label_color": "text",
+    "value_color": "primary",
+    "border_radius": 12
+  },
+  "chart_style": {
+    "gridlines": "subtle",
+    "legend": "top",
+    "tooltips": "rich"
+  },
+  "principles": [
+    "Use a restrained executive palette with risk colors reserved for critical items.",
+    "Keep KPI cards aligned and consistently sized.",
+    "Prioritize readability over decorative charting."
+  ]
+}

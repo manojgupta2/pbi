@@ -1,0 +1,564 @@
+{
+  "FactDefects": {
+    "rows": 1203,
+    "columns": [
+      "IssueKey",
+      "ProjectCode",
+      "ProjectName",
+      "IssueType",
+      "Priority",
+      "Status",
+      "Summary",
+      "Component",
+      "Environment",
+      "CreatedDate",
+      "UpdatedDate",
+      "ResolvedDate",
+      "Assignee",
+      "Reporter",
+      "CustomerImpact",
+      "SLATargetDays",
+      "AgeDays",
+      "SLABreached",
+      "OpenFlag",
+      "ClosedFlag"
+    ],
+    "column_count": 20,
+    "dtypes": {
+      "IssueKey": "object",
+      "ProjectCode": "object",
+      "ProjectName": "object",
+      "IssueType": "object",
+      "Priority": "object",
+      "Status": "object",
+      "Summary": "object",
+      "Component": "object",
+      "Environment": "object",
+      "CreatedDate": "datetime64[ns]",
+      "UpdatedDate": "datetime64[ns]",
+      "ResolvedDate": "datetime64[ns]",
+      "Assignee": "object",
+      "Reporter": "object",
+      "CustomerImpact": "object",
+      "SLATargetDays": "int64",
+      "AgeDays": "int64",
+      "SLABreached": "object",
+      "OpenFlag": "int64",
+      "ClosedFlag": "int64"
+    },
+    "null_counts": {
+      "IssueKey": 0,
+      "ProjectCode": 0,
+      "ProjectName": 0,
+      "IssueType": 0,
+      "Priority": 0,
+      "Status": 0,
+      "Summary": 0,
+      "Component": 0,
+      "Environment": 0,
+      "CreatedDate": 0,
+      "UpdatedDate": 0,
+      "ResolvedDate": 849,
+      "Assignee": 0,
+      "Reporter": 0,
+      "CustomerImpact": 0,
+      "SLATargetDays": 0,
+      "AgeDays": 0,
+      "SLABreached": 0,
+      "OpenFlag": 0,
+      "ClosedFlag": 0
+    },
+    "sample_rows": [
+      {
+        "IssueKey": "API-1000",
+        "ProjectCode": "OMEN-API",
+        "ProjectName": "PS OMEN API",
+        "IssueType": "Bug",
+        "Priority": "Highest",
+        "Status": "In Progress",
+        "Summary": "API issue - stale data",
+        "Component": "API",
+        "Environment": "Production",
+        "CreatedDate": "2026-01-06T00:00:00",
+        "UpdatedDate": "2026-01-28T00:00:00",
+        "ResolvedDate": null,
+        "Assignee": "T. Khan",
+        "Reporter": "QA Team",
+        "CustomerImpact": "Yes",
+        "SLATargetDays": 2,
+        "AgeDays": 252,
+        "SLABreached": "Yes",
+        "OpenFlag": 1,
+        "ClosedFlag": 0
+      },
+      {
+        "IssueKey": "BI-1001",
+        "ProjectCode": "OMEN-BI",
+        "ProjectName": "PS OMEN BI",
+        "IssueType": "Bug",
+        "Priority": "Medium",
+        "Status": "Resolved",
+        "Summary": "Semantic Model issue - incorrect result",
+        "Component": "Semantic Model",
+        "Environment": "Production",
+        "CreatedDate": "2026-07-09T00:00:00",
+        "UpdatedDate": "2026-07-22T00:00:00",
+        "ResolvedDate": "2026-09-05T00:00:00",
+        "Assignee": "D. Rao",
+        "Reporter": "QA Team",
+        "CustomerImpact": "Potential",
+        "SLATargetDays": 10,
+        "AgeDays": 58,
+        "SLABreached": "Yes",
+        "OpenFlag": 0,
+        "ClosedFlag": 1
+      },
+      {
+        "IssueKey": "DW-1002",
+        "ProjectCode": "OMEN-DW",
+        "ProjectName": "PS OMEN DATA WAREHOUSE",
+        "IssueType": "Bug",
+        "Priority": "Medium",
+        "Status": "Resolved",
+        "Summary": "Data Quality issue - processing failure",
+        "Component": "Data Quality",
+        "Environment": "UAT",
+        "CreatedDate": "2026-08-22T00:00:00",
+        "UpdatedDate": "2026-08-26T00:00:00",
+        "ResolvedDate": "2026-09-14T00:00:00",
+        "Assignee": "V. Nair",
+        "Reporter": "Product Team",
+        "CustomerImpact": "Potential",
+        "SLATargetDays": 10,
+        "AgeDays": 23,
+        "SLABreached": "Yes",
+        "OpenFlag": 0,
+        "ClosedFlag": 1
+      },
+      {
+        "IssueKey": "APP-1003",
+        "ProjectCode": "OMEN-APP",
+        "ProjectName": "PS OMEN APP",
+        "IssueType": "Bug",
+        "Priority": "Medium",
+        "Status": "Closed",
+        "Summary": "ETL issue - stale data",
+        "Component": "ETL",
+        "Environment": "QA",
+        "CreatedDate": "2025-12-23T00:00:00",
+        "UpdatedDate": "2025-12-29T00:00:00",
+        "ResolvedDate": "2026-02-20T00:00:00",
+        "Assignee": "T. Khan",
+        "Reporter": "Data Operations",
+        "CustomerImpact": "No",
+        "SLATargetDays": 10,
+        "AgeDays": 59,
+        "SLABreached": "Yes",
+        "OpenFlag": 0,
+        "ClosedFlag": 1
+      },
+      {
+        "IssueKey": "DE-1004",
+        "ProjectCode": "OMEN-DE",
+        "ProjectName": "PS OMEN DATA ENG",
+        "IssueType": "Bug",
+        "Priority": "Highest",
+        "Status": "Resolved",
+        "Summary": "ETL issue - processing failure",
+        "Component": "ETL",
+        "Environment": "UAT",
+        "CreatedDate": "2025-12-10T00:00:00",
+        "UpdatedDate": "2025-12-22T00:00:00",
+        "ResolvedDate": "2026-01-08T00:00:00",
+        "Assignee": "V. Nair",
+        "Reporter": "Data Operations",
+        "CustomerImpact": "No",
+        "SLATargetDays": 2,
+        "AgeDays": 29,
+        "SLABreached": "Yes",
+        "OpenFlag": 0,
+        "ClosedFlag": 1
+      }
+    ],
+    "duplicated_keys": {
+      "IssueKey": {
+        "unique": 1203,
+        "duplicate_rows": 0
+      },
+      "ProjectCode": {
+        "unique": 5,
+        "duplicate_rows": 1198
+      },
+      "ProjectName": {
+        "unique": 5,
+        "duplicate_rows": 1198
+      },
+      "Priority": {
+        "unique": 4,
+        "duplicate_rows": 1199
+      },
+      "Status": {
+        "unique": 5,
+        "duplicate_rows": 1198
+      },
+      "CreatedDate": {
+        "unique": 315,
+        "duplicate_rows": 888
+      },
+      "UpdatedDate": {
+        "unique": 318,
+        "duplicate_rows": 885
+      },
+      "ResolvedDate": {
+        "unique": 197,
+        "duplicate_rows": 1005
+      }
+    }
+  },
+  "DimProject": {
+    "rows": 5,
+    "columns": [
+      "ProjectCode",
+      "ProjectName",
+      "Domain",
+      "Region"
+    ],
+    "column_count": 4,
+    "dtypes": {
+      "ProjectCode": "object",
+      "ProjectName": "object",
+      "Domain": "object",
+      "Region": "object"
+    },
+    "null_counts": {
+      "ProjectCode": 0,
+      "ProjectName": 0,
+      "Domain": 0,
+      "Region": 0
+    },
+    "sample_rows": [
+      {
+        "ProjectCode": "OMEN-DE",
+        "ProjectName": "PS OMEN DATA ENG",
+        "Domain": "Data Engineering",
+        "Region": "India"
+      },
+      {
+        "ProjectCode": "OMEN-BI",
+        "ProjectName": "PS OMEN BI",
+        "Domain": "Power BI",
+        "Region": "India"
+      },
+      {
+        "ProjectCode": "OMEN-APP",
+        "ProjectName": "PS OMEN APP",
+        "Domain": "Application",
+        "Region": "US"
+      },
+      {
+        "ProjectCode": "OMEN-API",
+        "ProjectName": "PS OMEN API",
+        "Domain": "Integration",
+        "Region": "UK"
+      },
+      {
+        "ProjectCode": "OMEN-DW",
+        "ProjectName": "PS OMEN DATA WAREHOUSE",
+        "Domain": "Data Platform",
+        "Region": "India"
+      }
+    ],
+    "duplicated_keys": {
+      "ProjectCode": {
+        "unique": 5,
+        "duplicate_rows": 0
+      },
+      "ProjectName": {
+        "unique": 5,
+        "duplicate_rows": 0
+      }
+    }
+  },
+  "DimDate": {
+    "rows": 330,
+    "columns": [
+      "Date",
+      "Year",
+      "Quarter",
+      "MonthNumber",
+      "Month",
+      "YearMonth",
+      "WeekNumber",
+      "DayOfWeek"
+    ],
+    "column_count": 8,
+    "dtypes": {
+      "Date": "datetime64[ns]",
+      "Year": "int64",
+      "Quarter": "object",
+      "MonthNumber": "int64",
+      "Month": "object",
+      "YearMonth": "object",
+      "WeekNumber": "int64",
+      "DayOfWeek": "object"
+    },
+    "null_counts": {
+      "Date": 0,
+      "Year": 0,
+      "Quarter": 0,
+      "MonthNumber": 0,
+      "Month": 0,
+      "YearMonth": 0,
+      "WeekNumber": 0,
+      "DayOfWeek": 0
+    },
+    "sample_rows": [
+      {
+        "Date": "2025-10-21T00:00:00",
+        "Year": 2025,
+        "Quarter": "Q4",
+        "MonthNumber": 10,
+        "Month": "Oct",
+        "YearMonth": "2025-10",
+        "WeekNumber": 43,
+        "DayOfWeek": "Tuesday"
+      },
+      {
+        "Date": "2025-10-22T00:00:00",
+        "Year": 2025,
+        "Quarter": "Q4",
+        "MonthNumber": 10,
+        "Month": "Oct",
+        "YearMonth": "2025-10",
+        "WeekNumber": 43,
+        "DayOfWeek": "Wednesday"
+      },
+      {
+        "Date": "2025-10-23T00:00:00",
+        "Year": 2025,
+        "Quarter": "Q4",
+        "MonthNumber": 10,
+        "Month": "Oct",
+        "YearMonth": "2025-10",
+        "WeekNumber": 43,
+        "DayOfWeek": "Thursday"
+      },
+      {
+        "Date": "2025-10-24T00:00:00",
+        "Year": 2025,
+        "Quarter": "Q4",
+        "MonthNumber": 10,
+        "Month": "Oct",
+        "YearMonth": "2025-10",
+        "WeekNumber": 43,
+        "DayOfWeek": "Friday"
+      },
+      {
+        "Date": "2025-10-25T00:00:00",
+        "Year": 2025,
+        "Quarter": "Q4",
+        "MonthNumber": 10,
+        "Month": "Oct",
+        "YearMonth": "2025-10",
+        "WeekNumber": 43,
+        "DayOfWeek": "Saturday"
+      }
+    ],
+    "duplicated_keys": {}
+  },
+  "DimPriority": {
+    "rows": 4,
+    "columns": [
+      "Priority",
+      "SeverityRank",
+      "SLATargetDays"
+    ],
+    "column_count": 3,
+    "dtypes": {
+      "Priority": "object",
+      "SeverityRank": "int64",
+      "SLATargetDays": "int64"
+    },
+    "null_counts": {
+      "Priority": 0,
+      "SeverityRank": 0,
+      "SLATargetDays": 0
+    },
+    "sample_rows": [
+      {
+        "Priority": "Highest",
+        "SeverityRank": 1,
+        "SLATargetDays": 2
+      },
+      {
+        "Priority": "High",
+        "SeverityRank": 2,
+        "SLATargetDays": 5
+      },
+      {
+        "Priority": "Medium",
+        "SeverityRank": 3,
+        "SLATargetDays": 10
+      },
+      {
+        "Priority": "Low",
+        "SeverityRank": 4,
+        "SLATargetDays": 20
+      }
+    ],
+    "duplicated_keys": {
+      "Priority": {
+        "unique": 4,
+        "duplicate_rows": 0
+      }
+    }
+  },
+  "DimStatus": {
+    "rows": 5,
+    "columns": [
+      "Status",
+      "IsOpen",
+      "IsClosed"
+    ],
+    "column_count": 3,
+    "dtypes": {
+      "Status": "object",
+      "IsOpen": "int64",
+      "IsClosed": "int64"
+    },
+    "null_counts": {
+      "Status": 0,
+      "IsOpen": 0,
+      "IsClosed": 0
+    },
+    "sample_rows": [
+      {
+        "Status": "Open",
+        "IsOpen": 1,
+        "IsClosed": 0
+      },
+      {
+        "Status": "In Progress",
+        "IsOpen": 1,
+        "IsClosed": 0
+      },
+      {
+        "Status": "Reopened",
+        "IsOpen": 1,
+        "IsClosed": 0
+      },
+      {
+        "Status": "Resolved",
+        "IsOpen": 0,
+        "IsClosed": 1
+      },
+      {
+        "Status": "Closed",
+        "IsOpen": 0,
+        "IsClosed": 1
+      }
+    ],
+    "duplicated_keys": {
+      "Status": {
+        "unique": 5,
+        "duplicate_rows": 0
+      }
+    }
+  },
+  "ExpectedKPIs": {
+    "rows": 9,
+    "columns": [
+      "Metric",
+      "ExpectedValue"
+    ],
+    "column_count": 2,
+    "dtypes": {
+      "Metric": "object",
+      "ExpectedValue": "int64"
+    },
+    "null_counts": {
+      "Metric": 0,
+      "ExpectedValue": 0
+    },
+    "sample_rows": [
+      {
+        "Metric": "Total defects",
+        "ExpectedValue": 1203
+      },
+      {
+        "Metric": "Open defects",
+        "ExpectedValue": 849
+      },
+      {
+        "Metric": "Closed/Resolved defects",
+        "ExpectedValue": 354
+      },
+      {
+        "Metric": "Highest priority defects",
+        "ExpectedValue": 137
+      },
+      {
+        "Metric": "High priority defects",
+        "ExpectedValue": 346
+      }
+    ],
+    "duplicated_keys": {
+      "Metric": {
+        "unique": 9,
+        "duplicate_rows": 0
+      }
+    }
+  },
+  "MonthlyTrend": {
+    "rows": 48,
+    "columns": [
+      "CreatedMonth",
+      "Priority",
+      "DefectCount"
+    ],
+    "column_count": 3,
+    "dtypes": {
+      "CreatedMonth": "object",
+      "Priority": "object",
+      "DefectCount": "int64"
+    },
+    "null_counts": {
+      "CreatedMonth": 0,
+      "Priority": 0,
+      "DefectCount": 0
+    },
+    "sample_rows": [
+      {
+        "CreatedMonth": "2025-10",
+        "Priority": "High",
+        "DefectCount": 15
+      },
+      {
+        "CreatedMonth": "2025-10",
+        "Priority": "Highest",
+        "DefectCount": 2
+      },
+      {
+        "CreatedMonth": "2025-10",
+        "Priority": "Low",
+        "DefectCount": 10
+      },
+      {
+        "CreatedMonth": "2025-10",
+        "Priority": "Medium",
+        "DefectCount": 20
+      },
+      {
+        "CreatedMonth": "2025-11",
+        "Priority": "High",
+        "DefectCount": 32
+      }
+    ],
+    "duplicated_keys": {
+      "Priority": {
+        "unique": 4,
+        "duplicate_rows": 44
+      }
+    }
+  }
+}

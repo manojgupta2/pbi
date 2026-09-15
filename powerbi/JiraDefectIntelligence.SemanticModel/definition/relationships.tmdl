@@ -20,3 +20,11 @@ relationship AutoDetected_b8a98400-8b7b-4bff-8c55-708bb8fac539
 	fromColumn: FactDefects.Status
 	toColumn: DimStatus.Status
 
+relationship f4c2c0a2-d712-4a16-9eb0-c06c27e7b73d
+	fromColumn: FactDefects.CreatedDate
+	toColumn: DimDate.Date
+
+relationship 8a6a2528-255e-4b49-9272-dab5954983fd
+	fromColumn: FactDefects.ProjectCode
+	toColumn: DimProject.ProjectCode
+

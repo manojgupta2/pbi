@@ -2,10 +2,10 @@ table DimDate
 	lineageTag: 30629ab5-71fa-45f1-ab6a-a8b7b07b06b7
 
 	column Date
-		dataType: int64
-		formatString: 0
+		dataType: dateTime
+		formatString: General Date
 		lineageTag: 6bd550fb-11aa-4f5a-9130-8819df4895b1
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: Date
 
 		annotation SummarizationSetBy = Automatic
@@ -14,7 +14,7 @@ table DimDate
 		dataType: int64
 		formatString: 0
 		lineageTag: fe4a545a-5b82-4ec7-948d-21fa0203e68e
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: Year
 
 		annotation SummarizationSetBy = Automatic
@@ -31,7 +31,7 @@ table DimDate
 		dataType: int64
 		formatString: 0
 		lineageTag: df310b2d-ec86-423f-9750-5540860ea719
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: MonthNumber
 
 		annotation SummarizationSetBy = Automatic
@@ -40,6 +40,7 @@ table DimDate
 		dataType: string
 		lineageTag: 6787e156-d3b4-4899-8b26-7595638a9615
 		summarizeBy: none
+		sortByColumn: MonthNumber
 		sourceColumn: Month
 
 		annotation SummarizationSetBy = Automatic
@@ -64,7 +65,7 @@ table DimDate
 		dataType: int64
 		formatString: 0
 		lineageTag: 78e60da5-27e0-4f42-a054-5eacdc79f90d
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: WeekNumber
 
 		annotation SummarizationSetBy = Automatic
@@ -84,7 +85,7 @@ table DimDate
 				  Source = Excel.Workbook(File.Contents("C:\work\DQ\pbi\data\power_bi_jira_defect_test_data.xlsx"), null, true),
 				  #"Navigation 1" = Source{[Item = "DimDate", Kind = "Sheet"]}[Data],
 				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
-				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"Date", Int64.Type}, {"Year", Int64.Type}, {"Quarter", type text}, {"MonthNumber", Int64.Type}, {"Month", type text}, {"YearMonth", type date}, {"WeekNumber", Int64.Type}, {"DayOfWeek", type text}})
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"Date", type date}, {"Year", Int64.Type}, {"Quarter", type text}, {"MonthNumber", Int64.Type}, {"Month", type text}, {"YearMonth", type date}, {"WeekNumber", Int64.Type}, {"DayOfWeek", type text}})
 				in
 				  #"Changed column type"
 

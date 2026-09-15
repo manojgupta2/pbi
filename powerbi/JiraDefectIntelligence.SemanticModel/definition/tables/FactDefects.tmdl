@@ -74,28 +74,28 @@ table FactDefects
 		annotation SummarizationSetBy = Automatic
 
 	column CreatedDate
-		dataType: int64
-		formatString: 0
+		dataType: dateTime
+		formatString: General Date
 		lineageTag: 182e955b-52c0-49a3-a438-662623bc651e
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: CreatedDate
 
 		annotation SummarizationSetBy = Automatic
 
 	column UpdatedDate
-		dataType: int64
-		formatString: 0
+		dataType: dateTime
+		formatString: General Date
 		lineageTag: 022462d2-fa26-4179-bedf-76bc13cf27ae
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: UpdatedDate
 
 		annotation SummarizationSetBy = Automatic
 
 	column ResolvedDate
-		dataType: int64
-		formatString: 0
+		dataType: dateTime
+		formatString: General Date
 		lineageTag: f459a1bf-45ea-475a-8e45-ad4c6e7c34e1
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: ResolvedDate
 
 		annotation SummarizationSetBy = Automatic
@@ -168,6 +168,10 @@ table FactDefects
 
 		annotation SummarizationSetBy = Automatic
 
+	measure 'Total Defects' = DISTINCTCOUNT(FactDefects[IssueKey])
+	measure 'Open Defects' = SUM(FactDefects[OpenFlag])
+	measure 'Closed Defects' = SUM(FactDefects[ClosedFlag])
+
 	partition FactDefects = m
 		mode: import
 		source =
@@ -175,7 +179,7 @@ table FactDefects
 				  Source = Excel.Workbook(File.Contents("C:\work\DQ\pbi\data\power_bi_jira_defect_test_data.xlsx"), null, true),
 				  #"Navigation 1" = Source{[Item = "FactDefects", Kind = "Sheet"]}[Data],
 				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
-				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"IssueKey", type text}, {"ProjectCode", type text}, {"ProjectName", type text}, {"IssueType", type text}, {"Priority", type text}, {"Status", type text}, {"Summary", type text}, {"Component", type text}, {"Environment", type text}, {"CreatedDate", Int64.Type}, {"UpdatedDate", Int64.Type}, {"ResolvedDate", Int64.Type}, {"Assignee", type text}, {"Reporter", type text}, {"CustomerImpact", type text}, {"SLATargetDays", Int64.Type}, {"AgeDays", Int64.Type}, {"SLABreached", type text}, {"OpenFlag", Int64.Type}, {"ClosedFlag", Int64.Type}})
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"IssueKey", type text}, {"ProjectCode", type text}, {"ProjectName", type text}, {"IssueType", type text}, {"Priority", type text}, {"Status", type text}, {"Summary", type text}, {"Component", type text}, {"Environment", type text}, {"CreatedDate", type date}, {"UpdatedDate", type date}, {"ResolvedDate", type date}, {"Assignee", type text}, {"Reporter", type text}, {"CustomerImpact", type text}, {"SLATargetDays", Int64.Type}, {"AgeDays", Int64.Type}, {"SLABreached", type text}, {"OpenFlag", Int64.Type}, {"ClosedFlag", Int64.Type}})
 				in
 				  #"Changed column type"
 
