@@ -1,274 +1,299 @@
-# Incremental End-to-End Plan: AI-Assisted Power BI Report Engineering with Groq
+# Simple End-to-End Power BI + Groq MVP
+## Incremental plan — no LangGraph, no Fabric, no over-engineering
 
-## 1. Objective
-
-Build a practical, low-cost, incrementally complex workflow for creating and maintaining stakeholder-ready Power BI reports with AI assistance.
-
-Target architecture:
-
-```text
-Excel / CSV / later Jira data
-        |
-        v
-Power BI Project (.pbip)
-        |
-        +--> Semantic Model
-        |
-        +--> Power BI Report / PBIR
-        |
-        v
-Power BI Skills + MCP in VS Code
-        |
-        v
-Groq (GPT-OSS models)
-        |
-        +--> Analyze
-        +--> Plan
-        +--> Author
-        +--> Validate
-```
-
-### Constraints
-
-- No Fabric Lakehouse/Warehouse dependency.
-- No Fabric capacity requirement.
-- Power BI Desktop is the primary development environment.
-- Power BI Project (`.pbip`) and PBIR/TMDL artifacts are source-controlled development artifacts.
-- Groq is the preferred LLM for cost efficiency.
-- Existing Power BI/Fabric skills in VS Code are reused wherever applicable.
-- Complexity is introduced only after the previous stage is proven.
-- LangGraph is deferred until a real requirement appears.
+> **Goal of this iteration:** prove one small, reliable end-to-end flow using the data we already have, Power BI, the Power BI skills already installed in VS Code, and Groq.
+>
+> **We are NOT building a multi-agent system in this iteration.**
+>
+> **We are NOT using LangGraph.**
+>
+> **We are NOT generating a Power BI report from scratch with AI.**
+>
+> **We are NOT using Fabric Lakehouse/Warehouse.**
+>
+> The first objective is reliability: **the Power BI project must open in Power BI Desktop before and after anything our automation touches.**
 
 ---
 
-# 2. Target Outcome
+# 1. What We Are Actually Building
 
-The mature workflow should allow a user to provide a requirement such as:
+Our first version should be deliberately boring.
 
-> Create a stakeholder dashboard for Jira defects and highlight the biggest risks.
+```text
+                 Test Excel Data
+                       |
+                       v
+              Power BI Desktop
+                       |
+                       v
+              Known-good PBIP
+                       |
+                       |
+              Power BI Skills
+                in VS Code
+                       |
+                       v
+                 Power BI
+              Semantic Model
+                       |
+                       v
+                    Groq
+                       |
+                       v
+              Business Insight
+```
 
-The AI-assisted workflow should be able to:
+The first AI workflow is:
 
-1. Inspect the Power BI project.
-2. Understand the semantic model.
-3. Use existing measures.
-4. Create or modify measures when required.
-5. Plan report pages and visuals.
-6. Create or modify visuals.
-7. Validate semantic-model/report changes.
-8. Render and review the report.
-9. Correct issues.
-10. Produce a stakeholder-ready Power BI project.
+```text
+User asks a question
+        |
+        v
+Simple Python application
+        |
+        v
+Groq understands the question
+        |
+        v
+Power BI skill/tool is used
+        |
+        v
+Semantic model is queried
+        |
+        v
+Small structured result
+        |
+        v
+Groq interprets the result
+        |
+        v
+Answer to user
+```
 
-Later, the same workflow can consume real Jira data and produce recurring intelligence.
+That is enough for the first iteration.
 
 ---
 
-# 3. Core Architecture Principles
+# 2. The Most Important Design Decision
 
-## 3.1 Power BI is the source of truth
+## Do NOT ask AI to create a Power BI report from scratch.
 
-Business calculations belong in the semantic model.
+This is the mistake we are explicitly avoiding.
 
-Preferred:
+Power BI projects contain several interdependent artifacts:
 
 ```text
-Fact data
-   |
-   v
-Semantic Model
-   |
-   v
-DAX measures
-   |
-   v
-Aggregated query result
-   |
-   v
-Groq reasoning
+PBIP
+ |
+ +-- Report
+ |     |
+ |     +-- PBIR definitions
+ |
+ +-- Semantic Model
+       |
+       +-- model metadata
+       +-- tables
+       +-- measures
+       +-- relationships
 ```
 
-Avoid sending the entire fact table to the LLM.
+A syntactically plausible file is not necessarily a valid Power BI project.
 
-## 3.2 Groq is the reasoning layer
+Therefore:
 
-Groq should primarily handle:
+> **Power BI Desktop creates the initial known-good project. AI operates on a project that Power BI has already created and successfully opened.**
 
-- requirement interpretation
-- report planning
-- business reasoning
-- risk/anomaly interpretation
-- natural-language explanations
-- structured decisions
-- tool selection
+This gives us a safe baseline.
 
-Power BI should handle:
+---
 
-- calculations
-- filtering
-- aggregation
-- relationships
-- business measures
-- report rendering
+# 3. Current Project
 
-## 3.3 Skills provide domain knowledge; MCP provides live capabilities
+Current VS Code structure:
 
-Use the existing Power BI skills and MCP capabilities in VS Code rather than recreating equivalent functionality.
+```text
+pbi/
+├── data/
+│   └── power_bi_jira_defect_test_data.xlsx
+│
+├── docs/
+│
+├── powerbi/
+│   ├── JiraDefectIntelligence.Report/
+│   ├── JiraDefectIntelligence.SemanticModel/
+│   ├── JiraDefectIntelligence.pbip
+│   └── JiraDefectIntelligence.pbix
+│
+├── prompts/
+├── tests/
+├── venv/
+│
+├── .env
+├── main.py
+├── requirements.txt
+└── power_bi_groq_incremental_plan.md
+```
 
-## 3.4 Smallest useful architecture first
+This is sufficient.
+
+Do not restructure the repository yet.
+
+---
+
+# 4. Scope of This Iteration
+
+## In scope
+
+- Existing Excel test data
+- Power BI Desktop
+- Power BI Project (`.pbip`)
+- Existing Power BI skills in VS Code
+- Existing Power BI MCP/tooling where available
+- Groq
+- One simple Python orchestration script
+- Semantic-model querying
+- KPI analysis
+- One controlled Power BI modification later
+- Validation that the PBIP still opens
+
+## Explicitly out of scope
+
+- LangGraph
+- Fabric Lakehouse
+- Fabric Warehouse
+- Data pipelines
+- Multiple agents
+- Agent memory
+- Complex orchestration
+- Autonomous report redesign
+- Full report generation from scratch
+- Jira API integration
+- Production deployment
+- Scheduled refresh
+- RAG/vector databases
+- Large-scale prompt frameworks
+
+---
+
+# 5. Target MVP
+
+At the end of this iteration, we want to demonstrate this:
+
+### User
+
+> Which project has the highest defect risk?
+
+### System
+
+```text
+1. Groq understands the request
+        |
+2. Power BI skill/tool inspects model if needed
+        |
+3. Power BI returns aggregated project-level data
+        |
+4. Groq analyzes the result
+        |
+5. System returns evidence-based answer
+```
+
+For example:
+
+```text
+Highest risk project: OMEN-DE
+
+Evidence:
+- Highest open-defect backlog
+- High SLA-breach count
+- Significant high/critical backlog
+
+Recommendation:
+Prioritize SLA-breached High/Highest defects for triage.
+```
+
+The important part is that the numbers come from **Power BI**, not from Groq's imagination.
+
+---
+
+# 6. Phase 0 — Stop and Establish a Known-Good Power BI Project
+
+## Objective
+
+Get a Power BI project that opens successfully.
+
+Do this before writing AI automation.
+
+### Step 0.1
+
+Open:
+
+```text
+powerbi/JiraDefectIntelligence.pbip
+```
+
+in Power BI Desktop.
+
+### Step 0.2
+
+If it opens successfully:
+
+**Do not change anything yet.**
+
+### Step 0.3
+
+Check:
+
+- Report view opens
+- Model view opens
+- Data is available
+- Tables are present
+- No obvious model errors
+
+### Step 0.4
+
+Save the project.
+
+### Step 0.5
+
+Close Power BI Desktop.
+
+### Step 0.6
+
+Reopen the same `.pbip`.
+
+This confirms the project is genuinely usable.
+
+---
+
+# 7. Phase 1 — Build Only the Minimum Semantic Model
+
+We need a simple model.
+
+Expected conceptual structure:
+
+```text
+                 DimDate
+                    |
+                    |
+DimProject ---- FactDefects ---- DimPriority
+                    |
+                    |
+                DimStatus
+```
+
+The exact physical structure should be based on the actual imported data.
+
+Do not add unnecessary tables.
+
+Do not optimize prematurely.
+
+---
+
+# 8. Phase 2 — Create a Tiny KPI Set
+
+We only need enough measures to prove the workflow.
 
 Start with:
-
-```text
-Groq -> Power BI query
-```
-
-Then:
-
-```text
-Groq -> Power BI query -> reasoning
-```
-
-Then:
-
-```text
-Groq -> report authoring
-```
-
-Then:
-
-```text
-Groq -> author -> validate -> visually review -> fix
-```
-
-Only later consider multi-agent orchestration.
-
----
-
-# 4. Initial Test Dataset
-
-Use the generated workbook:
-
-`power_bi_jira_defect_test_data.xlsx`
-
-It contains approximately 1,200 synthetic Jira-style defects plus supporting dimensions and validation data.
-
-| Sheet | Purpose |
-|---|---|
-| `FactDefects` | Main defect fact table |
-| `DimProject` | Project dimension |
-| `DimDate` | Date dimension |
-| `DimPriority` | Priority/SLA mapping |
-| `DimStatus` | Status classification |
-| `ExpectedKPIs` | Ground-truth KPI validation |
-| `MonthlyTrend` | Trend validation |
-
-Use this dataset until the complete AI-assisted Power BI workflow works reliably.
-
-Do not introduce real Jira integration early.
-
----
-
-# 5. Phase 0 — Environment Inventory
-
-## Objective
-
-Understand exactly what Power BI skills, MCP servers, VS Code extensions, local tools, and model endpoints are already available.
-
-## Tasks
-
-### 0.1 Inventory VS Code
-
-Confirm:
-
-- Power BI extensions
-- Fabric/Power BI skills
-- MCP configuration
-- Git
-- Power BI Desktop
-- PBIP/PBIR support
-- TMDL support
-- Python availability if useful
-- Groq API access
-
-### 0.2 Inventory existing skills
-
-Identify capabilities for:
-
-- semantic model inspection
-- semantic model authoring
-- DAX
-- report planning
-- report authoring
-- report validation
-- screenshot/rendering
-- report management
-
-Do not install duplicate tooling before checking what already exists.
-
-### 0.3 Repository
-
-Recommended:
-
-```text
-jira-defect-powerbi-ai/
-|
-+-- data/
-|   +-- power_bi_jira_defect_test_data.xlsx
-|
-+-- powerbi/
-|   +-- JiraDefectIntelligence.pbip
-|   +-- JiraDefectIntelligence.Report/
-|   +-- JiraDefectIntelligence.SemanticModel/
-|
-+-- prompts/
-+-- tests/
-+-- docs/
-+-- .gitignore
-```
-
-## Exit criteria
-
-- Power BI Desktop opens.
-- Existing Power BI skills are identified.
-- MCP requirements are understood.
-- Git repository exists.
-- Test workbook is available.
-
----
-
-# 6. Phase 1 — Create the Baseline Power BI Project
-
-## Objective
-
-Create a clean Power BI project without AI automation.
-
-## Tasks
-
-1. Open Power BI Desktop.
-2. Import `FactDefects`.
-3. Import dimensions.
-4. Create a star schema.
-5. Create a dedicated Date table.
-6. Mark the Date table.
-7. Create relationships.
-8. Hide technical keys where appropriate.
-9. Set correct data types.
-10. Configure basic formatting.
-
-Recommended model:
-
-```text
-                    DimDate
-                       |
-                       |
-DimProject ---- FactDefects ---- DimPriority
-                       |
-                       |
-                  DimStatus
-```
-
-## Initial measures
 
 ```DAX
 Total Defects =
@@ -284,26 +309,10 @@ CALCULATE(
 ```
 
 ```DAX
-Closed Defects =
-CALCULATE(
-    [Total Defects],
-    FactDefects[ClosedFlag] = 1
-)
-```
-
-```DAX
-Highest Priority Defects =
-CALCULATE(
-    [Total Defects],
-    FactDefects[Priority] = "Highest"
-)
-```
-
-```DAX
 High + Highest Defects =
 CALCULATE(
     [Total Defects],
-    FactDefects[Priority] IN {"Highest", "High"}
+    FactDefects[Priority] IN {"High", "Highest"}
 )
 ```
 
@@ -328,1335 +337,1014 @@ Average Age =
 AVERAGE(FactDefects[AgeDays])
 ```
 
-## Exit criteria
+That's enough for MVP.
 
-Power BI values match the `ExpectedKPIs` sheet.
+We do NOT need 50 measures.
 
-Initial ground truth:
+---
+
+# 9. Phase 3 — Validate the Data
+
+The test workbook contains expected KPI values.
+
+Initial validation:
 
 | KPI | Expected |
 |---|---:|
-| Total defects | 1203 |
-| Open defects | 849 |
-| Closed/Resolved defects | 354 |
-| Highest priority | 137 |
-| High priority | 346 |
+| Total Defects | 1203 |
+| Open Defects | 849 |
+| Closed/Resolved | 354 |
+| Highest | 137 |
+| High | 346 |
 | Open High/Highest | 357 |
-| Open SLA-breached | 813 |
-| All SLA-breached | 1097 |
+| Open SLA Breached | 813 |
+| All SLA Breached | 1097 |
 | Reopened | 127 |
 
-Do not proceed until the baseline is correct.
+The exact values should be verified against the current workbook/model if the data/model has been changed.
+
+## Rule
+
+If the baseline does not match:
+
+> **Stop. Fix Power BI first.**
+
+Do not blame Groq.
 
 ---
 
-# 7. Phase 2 — PBIP and Git Baseline
+# 10. Phase 4 — Create a Very Simple Report Manually
 
-## Objective
+This report exists only to provide a known-good stakeholder surface.
 
-Make the Power BI project an AI-editable, source-controlled and reversible artifact.
+Do NOT ask AI to create it.
 
-## Tasks
+Create one page:
 
-1. Save as Power BI Project.
-2. Confirm `.pbip`.
-3. Confirm report artifacts.
-4. Confirm semantic-model artifacts.
-5. Add to Git.
-6. Commit the known-good baseline.
+## `Executive Overview`
 
-Suggested commit:
+Use:
 
-```text
-baseline: Jira defect Power BI model and report
-```
-
-Never let AI work against the only copy.
-
-## Exit criteria
-
-A clean Git checkout reproduces the baseline.
-
----
-
-# 8. Phase 3 — Build the Stakeholder Report
-
-Create the baseline report before introducing autonomous AI changes.
-
-## Page 1 — Executive Overview
-
-KPIs:
+### Cards
 
 - Total Defects
 - Open Defects
 - High + Highest
 - SLA Breached
 - Reopened
-- Average Age
 
-Visuals:
+### One chart
 
-- Monthly defect trend
-- Defects by priority
-- Defects by status
-- Defects by project
-- SLA breach overview
+```text
+Defects by Project
+```
 
-## Page 2 — Defect Analysis
+### One chart
 
-- Priority x Status
-- Aging buckets
-- Component
-- Assignee
-- Environment
-- Customer impact
-- Monthly trend
+```text
+Defects by Priority
+```
 
-## Page 3 — Risk Analysis
+### One slicer
 
-- Oldest High/Highest defects
-- SLA breach by project
-- SLA breach by component
-- Reopened defects by component
-- High-risk project comparison
+```text
+Project
+```
 
-## Page 4 — Details
+That's it.
 
-Table:
+No fancy dashboard.
 
-- IssueKey
-- Summary
-- Project
-- Priority
-- Status
-- Component
-- Assignee
-- Age
-- SLA
-- Customer Impact
+No 15 visuals.
 
-Add drill-through where useful.
+No AI-generated layout.
 
-## Exit criteria
+The purpose is to prove:
 
-A stakeholder can use the report without AI.
+```text
+Data -> Model -> Report -> Power BI Desktop
+```
 
-This is the baseline against which AI changes are judged.
+works.
 
 ---
 
-# 9. Phase 4 — Make the Semantic Model AI-Friendly
+# 11. Phase 5 — Create the Golden Baseline
 
-## Objective
+This is the most important checkpoint.
 
-Improve model metadata so the AI agent can understand business meaning.
+Once the report opens correctly:
 
-For important measures add:
+```text
+Power BI Desktop
+      |
+      v
+Save
+      |
+      v
+Close
+      |
+      v
+Reopen
+      |
+      v
+PASS
+```
 
-- description
-- business definition
-- correct format
-- meaningful name
+Then:
+
+```bash
+git status
+```
+
+Commit:
+
+```bash
+git add .
+git commit -m "baseline: known-good Power BI project"
+```
+
+From this point forward, this is the **golden baseline**.
+
+---
+
+# 12. Phase 6 — Verify Power BI Skills in VS Code
+
+Now we bring AI tooling into the picture.
+
+We already have Power BI skills installed.
+
+Do not build replacements.
+
+First identify exactly what the existing skills can do.
+
+We want to establish:
+
+```text
+Skill/tool
+    |
+    +-- inspect semantic model
+    |
+    +-- query model
+    |
+    +-- inspect report
+    |
+    +-- modify semantic model
+    |
+    +-- modify report
+    |
+    +-- validate
+```
+
+We do not need all of these immediately.
+
+For MVP, the only required capability is:
+
+> **Read/query the existing semantic model.**
+
+If the skills already expose this, use them directly.
+
+---
+
+# 13. Phase 7 — First Power BI Tool Test Without Groq
+
+Before connecting Groq, test the Power BI capability directly.
+
+Ask the tooling:
+
+> What tables, columns and measures are available in the JiraDefectIntelligence semantic model?
+
+Then:
+
+> What is the total number of defects?
+
+Then:
+
+> Return defects by project.
+
+Expected conceptual output:
+
+```text
+Project       Defects
+---------------------
+OMEN-DE       ...
+OMEN-NA       ...
+OMEN-AP       ...
+...
+```
+
+This step isolates Power BI tooling from LLM problems.
+
+## Exit criterion
+
+Power BI tooling can successfully inspect/query the known-good project.
+
+---
+
+# 14. Phase 8 — Connect Groq
+
+Now configure Groq.
+
+Use `.env` for the API key.
 
 Example:
 
 ```text
-Measure:
-Open Defects
-
-Description:
-Number of defects currently in Open, In Progress,
-or Reopened status.
+GROQ_API_KEY=...
 ```
 
-Add useful synonyms:
+Do not commit `.env`.
 
-| Business term | Model term |
-|---|---|
-| Critical | Highest |
-| Critical defects | Highest Priority Defects |
-| High priority | High |
-| Active defects | Open Defects |
-| SLA violations | SLA Breached |
-| Reopened bugs | Reopened Defects |
+The first Python program should be extremely small.
 
-Hide technical fields that should not be used directly by report consumers.
+Conceptually:
 
-## Exit criteria
+```text
+main.py
 
-A person unfamiliar with the model can understand the major tables and measures from metadata.
+    |
+    +-- get user question
+    |
+    +-- call Groq
+    |
+    +-- obtain structured intent
+    |
+    +-- call Power BI capability
+    |
+    +-- send result to Groq
+    |
+    +-- print answer
+```
+
+Do not introduce classes, frameworks or agent abstractions yet.
 
 ---
 
-# 10. Phase 5 — First Groq Proof of Concept
+# 15. Phase 9 — First End-to-End AI Flow
 
-## Objective
+The first supported question should be fixed.
 
-Prove Groq connectivity independently of Power BI.
+For example:
 
-## Model strategy
+> How many open defects do we have?
 
-### GPT-OSS 20B
+Flow:
 
-Use for:
+```text
+User
+ |
+ v
+main.py
+ |
+ v
+Groq
+ |
+ | "Need Open Defects"
+ v
+Power BI
+ |
+ | 849
+ v
+Groq
+ |
+ v
+"Currently there are 849 open defects."
+```
 
-- routing
-- simple classification
-- formatting
-- lightweight reasoning
+This is our first real end-to-end test.
 
-### GPT-OSS 120B
+---
 
-Use for:
+# 16. Phase 10 — Expand to Five Questions
 
-- complex reasoning
-- report planning
-- semantic-model reasoning
-- final stakeholder insights
+Once the first question works, support:
 
-## First test
+### Q1
 
-Send five KPI values to Groq and request structured JSON:
+> How many total defects are there?
+
+### Q2
+
+> How many open defects are there?
+
+### Q3
+
+> How many High and Highest priority defects are there?
+
+### Q4
+
+> How many SLA-breached defects are there?
+
+### Q5
+
+> How many defects have been reopened?
+
+The model should retrieve the values from Power BI.
+
+---
+
+# 17. Phase 11 — Add One Analytical Question
+
+Now introduce actual reasoning.
+
+Question:
+
+> Which project has the highest defect risk?
+
+Power BI should provide aggregated evidence such as:
+
+```text
+Project | Open | High/Highest | SLA Breached | Reopened
+```
+
+Groq then reasons over that small dataset.
+
+Important:
+
+```text
+Power BI = calculation
+Groq     = interpretation
+```
+
+Never reverse those responsibilities.
+
+---
+
+# 18. Phase 12 — Make the AI Output Structured
+
+For analytical questions, ask Groq to return:
 
 ```json
 {
+  "answer": "...",
   "risk_level": "HIGH",
-  "top_risks": [],
-  "recommended_actions": []
+  "evidence": [
+    "...",
+    "...",
+    "..."
+  ],
+  "recommendation": "..."
 }
 ```
 
-## Exit criteria
-
-- Groq API works.
-- Structured output works.
-- Model routing works.
-- 20B and 120B can be selected deliberately.
+This makes the workflow easier to extend later.
 
 ---
 
-# 11. Phase 6 — Connect Groq to Power BI Through Existing MCP/Skills
+# 19. Phase 13 — Add a Small Test Suite
 
-## Objective
+Create:
 
-Allow the LLM to obtain live information from the semantic model.
+```text
+tests/
+└── analyst_tests.json
+```
 
-Do not modify the report yet.
+Example:
 
-Workflow:
+```json
+[
+  {
+    "question": "How many total defects are there?",
+    "expected": 1203
+  },
+  {
+    "question": "How many open defects are there?",
+    "expected": 849
+  },
+  {
+    "question": "How many reopened defects are there?",
+    "expected": 127
+  }
+]
+```
+
+The first tests should validate the deterministic Power BI answer.
+
+Do not test whether Groq "sounds good."
+
+Test the numbers.
+
+---
+
+# 20. Phase 14 — Only Now Test One Controlled Modification
+
+Once this works:
+
+```text
+User
+ -> Groq
+ -> Power BI
+ -> Result
+ -> Groq
+ -> Answer
+```
+
+we can test:
+
+```text
+User
+ -> Groq
+ -> Power BI skill
+ -> modify existing PBIP
+ -> validate
+ -> Power BI Desktop
+```
+
+But only make **one tiny change**.
+
+Good first candidate:
+
+> Add a measure called `Average Age`.
+
+or:
+
+> Modify the title of an existing visual.
+
+The safest progression is:
+
+```text
+read
+ ↓
+query
+ ↓
+analyze
+ ↓
+modify one thing
+ ↓
+validate
+```
+
+---
+
+# 21. Critical Rule for Report Modification
+
+AI must NEVER be allowed to blindly generate an entire `.pbip` or PBIR project.
+
+Instead:
+
+```text
+Known-good PBIP
+      |
+      v
+Existing artifact
+      |
+      v
+Skill/tool performs controlled change
+      |
+      v
+Validation
+      |
+      v
+Power BI Desktop opens
+```
+
+If the skill/tool cannot guarantee a safe modification, we do the change manually for this iteration.
+
+That is completely acceptable.
+
+The goal of this iteration is **proof of workflow**, not maximum automation.
+
+---
+
+# 22. Phase 15 — Validation Gate
+
+Every future automated modification follows:
+
+```text
+              AI change
+                  |
+                  v
+             Validation
+                  |
+          +-------+-------+
+          |               |
+        PASS             FAIL
+          |               |
+          v               v
+       Continue        Revert
+                          |
+                          v
+                    Investigate
+```
+
+And additionally:
+
+```text
+PASS structural validation
+        |
+        v
+Open in Power BI Desktop
+        |
+        v
+PASS
+```
+
+This is our strongest protection against spending hours producing a broken Power BI project.
+
+---
+
+# 23. The MVP Architecture
+
+Keep the code approximately this simple:
+
+```text
+pbi/
+│
+├── data/
+│
+├── powerbi/
+│
+├── prompts/
+│   └── analyst.md
+│
+├── tests/
+│   └── analyst_tests.json
+│
+├── main.py
+├── requirements.txt
+└── .env
+```
+
+No:
+
+```text
+agents/
+orchestrator/
+state/
+graph/
+memory/
+planner/
+reviewer/
+router/
+```
+
+yet.
+
+---
+
+# 24. Model Strategy
+
+Use Groq primarily for reasoning.
+
+## Default
+
+Use the smaller/cheaper GPT-OSS model for:
+
+- simple question understanding
+- intent classification
+- formatting
+- simple responses
+
+## Stronger model
+
+Use GPT-OSS 120B when the task needs:
+
+- complex reasoning
+- risk interpretation
+- complicated report requirements
+- later-stage planning
+
+Do not route everything to the largest model.
+
+---
+
+# 25. Token-Efficient Design
+
+This is critical.
+
+Bad:
+
+```text
+Excel 1203 rows
+       |
+       v
+      Groq
+```
+
+Good:
 
 ```text
 User question
       |
       v
-Groq
-      |
-      v
-Inspect semantic model
-      |
-      v
-Generate/query DAX
-      |
-      v
 Power BI
       |
       v
-Small structured result
+5-20 aggregated rows
       |
       v
 Groq
-      |
-      v
-Answer
 ```
 
-Test:
-
-1. How many defects are currently open?
-2. How many High/Highest defects are open?
-3. Which project has the most open defects?
-4. Which component has the highest SLA breach count?
-5. How many defects were reopened?
-
-## Cost rule
-
-Never send the whole fact table to Groq.
-
-Preferred:
+For example:
 
 ```text
-Power BI -> 5-row aggregation -> Groq
+Project | Open | SLA Breached | High/Highest
+OMEN-DE | 281  | 244          | 156
+...
 ```
 
-not:
-
-```text
-1203 records -> Groq
-```
-
-## Exit criteria
-
-Natural-language questions can be answered from live semantic-model data.
+Groq does not need the underlying 1,203 rows to determine which project is riskiest.
 
 ---
 
-# 12. Phase 7 — Controlled Power BI Analyst Agent
+# 26. Prompt Strategy
 
-## Objective
+For MVP, we need only two prompts.
 
-Move from isolated questions to a reusable analytical workflow.
+## `prompts/analyst.md`
 
-Agent/persona:
-
-```text
-Power BI Defect Analyst
-```
-
-Responsibilities:
-
-1. Understand the question.
-2. Inspect model metadata when necessary.
-3. Prefer existing measures.
-4. Generate DAX only when necessary.
-5. Query Power BI.
-6. Analyze the result.
-7. Return concise business reasoning.
-
-Important instruction:
-
-> Prefer existing semantic-model measures over recreating business logic.
-
-## Exit criteria
-
-The agent reliably answers a useful set of stakeholder questions.
-
----
-
-# 13. Phase 8 — Risk Intelligence
-
-## Objective
-
-Make Groq useful for interpretation, not calculation.
-
-Workflow:
+Core rules:
 
 ```text
-Power BI
-   |
-   +-- Open defects by project
-   +-- SLA breaches by project
-   +-- Average age
-   +-- High/Critical backlog
-   +-- Reopened trend
-   |
-   v
-Groq
-   |
-   v
-Risk assessment
-```
+You are a Power BI analyst.
 
-Recommended output:
+Power BI is the source of truth for numerical calculations.
 
-```json
-{
-  "overall_risk": "HIGH",
-  "risks": [
-    {
-      "title": "...",
-      "severity": "HIGH",
-      "evidence": ["..."],
-      "recommended_action": "..."
-    }
-  ]
-}
-```
-
-Every risk must be supported by Power BI evidence.
-
-Avoid:
-
-> The team has a productivity problem.
-
-Prefer:
-
-> OMEN-DE has 281 open defects and 244 SLA breaches, making it the highest current backlog risk.
-
-## Exit criteria
-
-AI-generated insights are traceable to semantic-model results.
-
----
-
-# 14. Phase 9 — Introduce Power BI Report Planning
-
-## Objective
-
-Make AI plan report changes before authoring them.
-
-Workflow:
-
-```text
-Requirement
-    |
-    v
-Report Planner
-    |
-    v
-Report brief
-    |
-    v
-Approval
-    |
-    v
-Authoring
-```
-
-Example requirement:
-
-> Add a stakeholder view showing SLA risk by component.
-
-Expected plan:
-
-```text
-Page:
-Risk Analysis
-
-Visual:
-Bar chart
-
-Category:
-Component
-
-Value:
-SLA Breached
-
-Sort:
-Descending
-
-Purpose:
-Identify components generating the largest SLA backlog.
-```
-
-## Exit criteria
-
-AI produces a clear implementation plan before modifying PBIR.
-
----
-
-# 15. Phase 10 — First AI Report Modification
-
-## Objective
-
-Make one controlled report change.
-
-Example:
-
-> Add a visual showing SLA breaches by component.
-
-Workflow:
-
-```text
-User
- |
- v
-Groq
- |
- v
-Inspect model
- |
- v
-Inspect current report
- |
- v
-Plan visual
- |
- v
-Report Authoring skill
- |
- v
-PBIR modification
- |
- v
-Validation
-```
-
-Start with one visual.
-
-Do not begin with full-page redesigns.
-
-## Exit criteria
-
-AI successfully creates one correct visual without damaging existing content.
-
----
-
-# 16. Phase 11 — Structural Validation
-
-After every AI modification:
-
-```text
-Modify
-  |
-  v
-Validate
-  |
-  +--> PASS
-  |
-  +--> FAIL -> Diagnose -> Fix
-```
-
-Validate:
-
-- report structure
-- pages
-- visuals
-- visual configuration
-- measure references
-- field references
-- filters
-- relationships
-- invalid references
-
-## Exit criteria
-
-No AI report change is considered complete until validation passes.
-
----
-
-# 17. Phase 12 — Screenshot/Visual QA
-
-Structural validation is not enough.
-
-Workflow:
-
-```text
-PBIR modification
-       |
-       v
-Structural validation
-       |
-       v
-Render/open Power BI
-       |
-       v
-Screenshot
-       |
-       v
-AI visual review
-       |
-       +--> PASS
-       |
-       +--> FAIL -> Modify -> Render again
-```
-
-Check:
-
-- overlapping visuals
-- unreadable labels
-- clipped titles
-- excessive whitespace
-- inconsistent alignment
-- poor chart selection
-- confusing slicers
-- excessive density
-- weak visual hierarchy
-
-## Exit criteria
-
-AI-generated changes are structurally valid and visually acceptable.
-
----
-
-# 18. Phase 13 — Automated KPI Regression Testing
-
-Use `ExpectedKPIs` as the first regression-test suite.
-
-Example:
-
-```text
-Metric                         Expected
-------------------------------------------------
-Total Defects                  1203
-Open Defects                    849
-Closed/Resolved                 354
-Highest                         137
-High                            346
-Open High/Highest               357
-Open SLA Breached               813
-All SLA Breached               1097
-Reopened                        127
-```
-
-Return structured results:
-
-```json
-{
-  "status": "PASS",
-  "tests": [
-    {
-      "metric": "Open Defects",
-      "expected": 849,
-      "actual": 849,
-      "status": "PASS"
-    }
-  ]
-}
-```
-
-## Exit criteria
-
-The workflow can automatically determine whether a report/model change preserved core KPIs.
-
----
-
-# 19. Phase 14 — Closed-Loop Power BI Builder
-
-Combine planning, authoring, structural validation, KPI tests and visual QA.
-
-```text
-Requirement
-    |
-    v
-Understand
-    |
-    v
-Inspect semantic model
-    |
-    v
-Inspect report
-    |
-    v
-Plan
-    |
-    v
-Author
-    |
-    v
-Structural validation
-    |
-    v
-KPI regression
-    |
-    v
-Render
-    |
-    v
-Visual QA
-    |
-    +---- FAIL ----> Fix
-    |
-    v
-PASS
-```
-
-This is the first genuinely agentic version.
-
----
-
-# 20. Phase 15 — Human Approval Gates
-
-Use approval based on change risk.
-
-## Low risk — may auto-execute
-
-- Add simple visual
-- Change visual title
-- Add slicer
-- Adjust label formatting
-
-## Medium risk — approval recommended
-
-- Create/change measures
-- Modify relationships
-- Significant page layout changes
-
-## High risk — mandatory approval
-
-- Delete pages
-- Delete measures
-- Change business logic
-- Change data source
-- Change security/RLS
-- Mass visual modifications
-
-Pattern:
-
-```text
-AI proposes
-     |
-     v
-Risk classification
-     |
-     +--> LOW -> execute
-     |
-     +--> MEDIUM -> approval
-     |
-     +--> HIGH -> mandatory approval
-```
-
----
-
-# 21. Phase 16 — Optimize Groq Cost
-
-## Rule 1 — Query, don't dump
-
-Reduce Power BI data before sending it to Groq.
-
-## Rule 2 — Cache metadata
-
-Cache:
-
-- tables
-- columns
-- measures
-- relationships
-- descriptions
-
-Avoid rediscovering the schema every time.
-
-## Rule 3 — Reuse measures
+Do not invent numbers.
 
 Prefer existing semantic-model measures.
 
-## Rule 4 — Use 20B by default
+If a question requires data, obtain the data from Power BI.
 
-Route to 120B only for tasks that genuinely need stronger reasoning.
+Use Groq only to interpret the Power BI result.
 
-## Rule 5 — Structured outputs
-
-Use compact JSON for machine-to-machine communication.
-
-## Rule 6 — Minimal context
-
-Send only the model metadata and query result required for the current task.
-
-## Rule 7 — Modular prompts
-
-Prefer:
-
-```text
-system instructions
-+
-task
-+
-minimal model context
-+
-query result
+Keep responses concise and evidence-based.
 ```
 
-rather than injecting the whole project description every time.
+## Optional `prompts/query.md`
+
+Later, when query generation is needed:
+
+```text
+Generate the smallest query required to answer the user's question.
+
+Prefer existing measures.
+
+Do not retrieve raw fact rows when an aggregation can answer the question.
+```
+
+That's enough initially.
 
 ---
 
-# 22. Phase 17 — Introduce Real Jira Data
+# 27. What the First End-to-End Demo Should Look Like
 
-Only after the test-data workflow is reliable.
+We should be able to demonstrate this in one session.
 
-New architecture:
+## Step 1
 
-```text
-Jira
- |
- v
-Export/API/Connector
- |
- v
-Power BI
- |
- v
-Semantic Model
- |
- v
-Report
- |
- v
-AI Agent
-```
-
-The report should remain largely independent of the ingestion mechanism.
-
-Goal:
+Open:
 
 ```text
-test-data.xlsx
-       |
-       v
-real Jira data
+JiraDefectIntelligence.pbip
 ```
 
-without redesigning the semantic model/report unnecessarily.
+Power BI Desktop opens successfully.
+
+## Step 2
+
+Show the report.
+
+## Step 3
+
+Run:
+
+```text
+python main.py
+```
+
+## Step 4
+
+Ask:
+
+> How many open defects do we have?
+
+## Step 5
+
+System retrieves:
+
+```text
+849
+```
+
+from Power BI.
+
+## Step 6
+
+Groq generates:
+
+> There are currently 849 open defects.
+
+## Step 7
+
+Ask:
+
+> Which project has the highest SLA risk?
+
+## Step 8
+
+Power BI returns aggregated evidence.
+
+## Step 9
+
+Groq explains the result.
+
+That is a successful MVP.
 
 ---
 
-# 23. Phase 18 — Refresh and Recurring Intelligence
+# 28. What We Will Add Later
 
-Once real data is available:
+Once the above works, complexity can be added one layer at a time.
+
+## Iteration 2
+
+Add:
 
 ```text
-Data refresh
-     |
-     v
-Power BI semantic model
-     |
-     v
+Report inspection
+```
+
+AI can understand:
+
+- pages
+- visuals
+- measures used
+- filters
+
+## Iteration 3
+
+Add:
+
+```text
+Controlled report modification
+```
+
+AI can make one small change.
+
+## Iteration 4
+
+Add:
+
+```text
+Validation
++
 Regression tests
-     |
-     v
-AI analysis
-     |
-     v
-Change/risk detection
-     |
-     v
-Stakeholder summary
 ```
 
-Example:
+## Iteration 5
+
+Add:
 
 ```text
-Daily Defect Intelligence
-
-Overall Risk: HIGH
-
-Changes since yesterday:
-- Open critical defects: +7
-- SLA breaches: +31
-- Reopened defects: +8
-
-Largest concern:
-OMEN-DE
+Report planning
 ```
 
-Notify stakeholders only when changes are meaningful.
+## Iteration 6
 
----
-
-# 24. Phase 19 — Reassess LangGraph
-
-Do not add LangGraph merely because the solution is agentic.
-
-Reconsider only if the workflow needs:
-
-- persistent state
-- complex branching
-- long-running jobs
-- multiple specialized agents
-- advanced retry/recovery
-- durable approval workflows
-- complex parallel execution
-
-Until then:
-
-```text
-One agent
-+
-Tools
-+
-Skills
-+
-Structured workflow
-```
-
-is preferred.
-
----
-
-# 25. Recommended Agent Roles
-
-Initially use one agent with task modes:
-
-```text
-Power BI Assistant
-|
-+-- Analyst mode
-|
-+-- Planner mode
-|
-+-- Builder mode
-|
-+-- Reviewer mode
-```
-
-Do not create four separate LLM agents initially.
-
----
-
-# 26. Power BI Skill Usage
-
-Use existing skills according to the task.
-
-| Task | Preferred capability |
-|---|---|
-| Understand model | Semantic model skill |
-| Create/change measures | Semantic model authoring |
-| Plan report | Report Planner |
-| Create/change visuals | Report Authoring |
-| Validate report | Report validation |
-| Inspect live model | Power BI MCP |
-| Understand requirement | Groq |
-| Explain results | Groq |
-| Visual QA | Groq + rendered report |
-| Regression testing | Deterministic validation |
-
-Principle:
-
-> Use a Power BI skill whenever the task is fundamentally a Power BI operation; use Groq for interpretation and decision-making.
-
----
-
-# 27. Prompt Architecture
-
-Do not create one enormous system prompt.
-
-Use modular instructions.
-
-## Base
-
-```text
-You are a Power BI engineering assistant.
-
-Power BI is the source of truth for calculations.
-Use existing semantic-model measures whenever possible.
-Do not calculate business KPIs from raw data when Power BI can calculate them.
-Use available Power BI skills and MCP tools instead of recreating their functionality.
-Never modify the report without inspecting the current state.
-After modifications, validate the report.
-Prefer the smallest safe change.
-```
-
-## Analyst
-
-```text
-Answer business questions using the Power BI semantic model.
-Generate the smallest necessary query.
-Return only the data required for reasoning.
-Explain conclusions using evidence from the query result.
-```
-
-## Builder
-
-```text
-Before modifying the report:
-1. Inspect the semantic model.
-2. Inspect the current report.
-3. Produce a concise implementation plan.
-4. Make the smallest required change.
-5. Validate the result.
-6. Do not delete or replace existing content unless explicitly requested.
-```
-
-## Reviewer
-
-```text
-Review the report for:
-1. correctness
-2. usability
-3. visual hierarchy
-4. layout
-5. business relevance
-6. KPI consistency
-
-Return PASS or FAIL with specific evidence.
-```
-
----
-
-# 28. Git and Recovery
-
-Every meaningful AI change should be reversible.
-
-Recommended branches:
-
-```text
-main
- |
- +-- baseline
- |
- +-- ai/change-sla-component
- |
- +-- ai/change-risk-page
- |
- +-- ai/layout-improvement
-```
-
-Before AI modification:
-
-```bash
-git status
-git add .
-git commit -m "checkpoint before AI change"
-```
-
-After successful validation:
-
-```bash
-git commit -m "AI: add SLA breach by component visual"
-```
-
-If an AI change is bad, use Git to inspect/revert it.
-
-Do not rely on the LLM to remember how to undo its own changes.
-
----
-
-# 29. MVP Definition of Done
-
-## Data
-
-- [ ] Test workbook loads.
-- [ ] Star schema is correct.
-- [ ] Date dimension works.
-
-## Semantic model
-
-- [ ] Core measures exist.
-- [ ] KPI values match expected values.
-- [ ] Measures have useful descriptions.
-- [ ] Technical fields are appropriately hidden.
-
-## Report
-
-- [ ] Four stakeholder pages exist.
-- [ ] Filters work.
-- [ ] Drill-through works where appropriate.
-- [ ] Report is visually acceptable.
-
-## AI
-
-- [ ] Groq 20B works.
-- [ ] Groq 120B works.
-- [ ] Natural-language questions query Power BI.
-- [ ] AI explains KPI results.
-- [ ] AI identifies risks.
-
-## Authoring
-
-- [ ] AI can plan a report change.
-- [ ] AI can create one visual.
-- [ ] AI can modify one existing visual.
-- [ ] Structural validation works.
-- [ ] KPI regression tests work.
-- [ ] Screenshot/visual QA works.
-
-## Safety
-
-- [ ] Git baseline exists.
-- [ ] AI changes are reversible.
-- [ ] High-risk changes require approval.
-
----
-
-# 30. Exact Implementation Sequence
-
-```text
-STEP 01
-Inventory existing VS Code Power BI skills
-        |
-STEP 02
-Create Git repository
-        |
-STEP 03
-Import test Excel into Power BI
-        |
-STEP 04
-Create PBIP
-        |
-STEP 05
-Build semantic model
-        |
-STEP 06
-Create DAX measures
-        |
-STEP 07
-Validate ExpectedKPIs
-        |
-STEP 08
-Create stakeholder report
-        |
-STEP 09
-Improve semantic-model descriptions
-        |
-STEP 10
-Connect Groq
-        |
-STEP 11
-Connect Groq -> Power BI MCP
-        |
-STEP 12
-Answer live semantic-model questions
-        |
-STEP 13
-Add AI risk analysis
-        |
-STEP 14
-Use Report Planner
-        |
-STEP 15
-AI creates one visual
-        |
-STEP 16
-Structural validation
-        |
-STEP 17
-KPI regression testing
-        |
-STEP 18
-Screenshot/visual QA
-        |
-STEP 19
-Closed-loop report authoring
-        |
-STEP 20
-Human approval gates
-        |
-STEP 21
-Optimize token/model routing
-        |
-STEP 22
-Replace test data with Jira data
-        |
-STEP 23
-Add recurring intelligence
-        |
-STEP 24
-Reassess need for LangGraph
-```
-
----
-
-# 31. Milestone-Based Complexity
-
-## Level 1 — Deterministic Power BI
-
-```text
-Excel
- -> Power BI
- -> Semantic Model
- -> Report
-```
-
-Goal: trustworthy baseline.
-
-## Level 2 — AI Analyst
-
-```text
-User
- -> Groq
- -> Power BI MCP
- -> Semantic Model
- -> Groq
- -> Answer
-```
-
-Goal: AI can understand live report data.
-
-## Level 3 — AI Planner
-
-```text
-Requirement
- -> Groq
- -> Power BI Planner
- -> Plan
-```
-
-Goal: AI understands how to implement report changes.
-
-## Level 4 — AI Builder
+Add:
 
 ```text
 Plan
- -> PBIR
- -> Validation
-```
-
-Goal: AI can safely modify reports.
-
-## Level 5 — Closed Loop
-
-```text
-Plan
- -> Build
+ -> Implement
  -> Validate
- -> Render
- -> Review
- -> Fix
 ```
 
-Goal: autonomous report engineering.
+## Iteration 7
 
-## Level 6 — Production Intelligence
+Add separate specialized agents if there is a real reason:
 
 ```text
-Jira
- -> Power BI
- -> AI analysis
- -> Change detection
- -> Stakeholder insight
+Analyst
+Planner
+Builder
+Reviewer
 ```
 
-Goal: recurring business automation.
+## Iteration 8
 
-## Level 7 — Advanced Orchestration
+Add more sophisticated orchestration only if the workflow actually needs it.
 
-Only if required:
-
-```text
-Multiple agents
-State
-Retries
-Approvals
-Parallel tasks
-Long-running workflows
-```
-
-Potentially introduce LangGraph here.
+**LangGraph is not part of this iteration or the planned architecture for this prototype.**
 
 ---
 
-# 32. First Sprint
+# 29. Future Agent Architecture
 
-Do only:
+Later, when the simple flow is proven, we can evolve toward:
 
-1. Inventory existing VS Code skills.
-2. Create Git repository.
-3. Import test workbook into Power BI.
-4. Create PBIP.
-5. Build semantic model.
-6. Create core DAX measures.
-7. Validate against `ExpectedKPIs`.
-8. Create the four-page stakeholder report.
-9. Commit a clean baseline.
+```text
+                    User
+                      |
+                      v
+                  Controller
+                      |
+       +--------------+--------------+
+       |              |              |
+       v              v              v
+    Analyst        Planner         Reviewer
+       |              |
+       |              v
+       |           Builder
+       |              |
+       +--------------+
+              |
+              v
+          Power BI
+```
 
-### Sprint 1 success condition
+But that is a **future iteration**.
 
-The report remains useful even if AI is completely removed.
+The MVP remains:
+
+```text
+              User
+                |
+                v
+             Groq
+                |
+                v
+        Power BI Skills
+                |
+                v
+       Semantic Model
+                |
+                v
+             Groq
+                |
+                v
+             Answer
+```
 
 ---
 
-# 33. Second Sprint
+# 30. Definition of Done for This Iteration
 
-Then:
+We are finished when all of these are true:
 
-1. Configure Groq.
-2. Test GPT-OSS 20B.
-3. Test GPT-OSS 120B.
-4. Connect Power BI MCP.
-5. Inspect semantic model through the agent.
-6. Execute a simple DAX query.
-7. Return the result to Groq.
-8. Answer five predefined business questions.
+### Power BI
 
-### Sprint 2 success condition
+- [ ] `.pbip` opens successfully.
+- [ ] Semantic model works.
+- [ ] Test data is loaded.
+- [ ] Core measures work.
+- [ ] KPI values are validated.
+- [ ] Simple stakeholder page exists.
+- [ ] `.pbip` can be closed and reopened.
+
+### VS Code
+
+- [ ] Existing Power BI skills are identified.
+- [ ] Power BI skill/tool can inspect the project.
+- [ ] Power BI skill/tool can retrieve model information.
+- [ ] Power BI skill/tool can execute/query the semantic model.
+
+### Groq
+
+- [ ] Groq connection works.
+- [ ] Small model works for simple intent.
+- [ ] Stronger model can be used for reasoning when needed.
+
+### End-to-end
+
+- [ ] User can ask a Power BI question.
+- [ ] Power BI provides the numbers.
+- [ ] Groq interprets the result.
+- [ ] Answer is evidence-based.
+- [ ] No raw dataset is unnecessarily sent to Groq.
+
+### Safety
+
+- [ ] Golden Git baseline exists.
+- [ ] No automated report generation from scratch.
+- [ ] Any automated modification is validated.
+- [ ] Power BI Desktop remains the final authority that the project is usable.
+
+---
+
+# 31. Exact Work Sequence From Where We Are Today
+
+Do these in this exact order.
 
 ```text
-User:
-Which project has the highest SLA risk?
-
-Agent:
-Queries Power BI
+1. Open JiraDefectIntelligence.pbip
         |
-        v
-Receives aggregate results
+2. Confirm it opens
         |
-        v
-Groq reasons
+3. Inspect Model view
         |
-        v
-Evidence-backed answer
+4. Inspect Report view
+        |
+5. Validate tables
+        |
+6. Validate core KPIs
+        |
+7. Create/finish ONE simple report page
+        |
+8. Close Power BI
+        |
+9. Reopen PBIP
+        |
+10. Git commit known-good baseline
+        |
+11. Test Power BI skill directly
+        |
+12. Query semantic model without Groq
+        |
+13. Configure Groq
+        |
+14. Connect main.py to Groq
+        |
+15. Implement ONE question
+        |
+16. Implement FIVE questions
+        |
+17. Implement ONE analytical question
+        |
+18. Add structured output
+        |
+19. Add deterministic tests
+        |
+20. Test ONE controlled Power BI modification
+        |
+21. Validate modification
+        |
+22. Reopen in Power BI Desktop
+        |
+23. Commit successful change
 ```
 
----
+**Stop after each major checkpoint.**
 
-# 34. Third Sprint
-
-Then:
-
-1. Add report planning.
-2. Ask AI to propose one visual.
-3. Review the plan.
-4. Let AI create the visual.
-5. Validate PBIR.
-6. Render.
-7. Visually inspect.
-8. Commit.
-
-### Sprint 3 success condition
-
-AI successfully adds a useful visual without breaking the report.
+Do not jump from step 1 to step 23.
 
 ---
 
-# 35. Fourth Sprint
+# 32. Success Criterion
 
-Then:
+The most important success criterion is not:
 
-1. Add automated KPI regression.
-2. Add visual QA.
-3. Add retry/fix loop.
-4. Add approval gates.
-5. Add model routing.
-6. Measure token usage.
+> "We created a sophisticated AI agent."
 
-### Sprint 4 success condition
+It is:
+
+> **"We have a working Power BI project, and Groq can use our existing Power BI capabilities to answer questions from its semantic model reliably."**
+
+Once that works, we have a solid foundation.
+
+Then adding:
 
 ```text
-Requirement
- -> Plan
- -> Build
- -> Test
- -> Review
- -> Fix
- -> PASS
+planning
++
+report authoring
++
+validation
++
+multiple agents
 ```
 
-At this point the project is a credible agentic Power BI engineering prototype.
+becomes incremental engineering rather than a giant experiment.
 
 ---
 
-# 36. Final Vision
+# 33. Final Principle
+
+## Keep this iteration brutally simple.
 
 ```text
-User:
-
-"Create a stakeholder-ready Power BI view showing
-where our Jira defect risks are increasing."
-
-             |
-             v
-
-        Groq Agent
-             |
-             +---- Inspect semantic model
-             |
-             +---- Inspect report
-             |
-             +---- Query Power BI
-             |
-             +---- Analyze results
-             |
-             +---- Plan changes
-             |
-             +---- Modify PBIR
-             |
-             +---- Validate
-             |
-             +---- Run KPI tests
-             |
-             +---- Render
-             |
-             +---- Review screenshot
-             |
-             +---- Fix if required
-             |
-             v
-
-      Stakeholder-ready
-       Power BI Project
+                    ┌─────────────┐
+                    │    Groq     │
+                    │  Reasoning  │
+                    └──────┬──────┘
+                           │
+                           │
+                    ┌──────▼──────┐
+                    │ Power BI    │
+                    │ Skills/MCP  │
+                    └──────┬──────┘
+                           │
+                           │
+                    ┌──────▼──────┐
+                    │  Semantic   │
+                    │    Model    │
+                    └─────────────┘
 ```
 
-## Final architectural rule
+**Power BI calculates.**
 
-> Let Power BI do Power BI work. Let Groq do reasoning. Let the existing Power BI skills/MCP provide controlled capabilities. Keep the data in Power BI and send only the minimum required information to the LLM.
+**Power BI skills provide controlled access.**
 
-This is the simplest path from a static test report to a genuinely useful AI-assisted Power BI engineering workflow without requiring Fabric infrastructure.
+**Groq reasons.**
+
+**Python connects the pieces.**
+
+**Power BI Desktop validates the final artifact.**
+
+No LangGraph. No Fabric. No multi-agent architecture. No giant autogenerated PBIR.
+
+First make this small loop work.
+
+Then make it smarter.
