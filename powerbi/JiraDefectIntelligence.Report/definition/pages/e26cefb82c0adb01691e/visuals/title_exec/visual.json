@@ -1,0 +1,16 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "title_exec",
+  "position": {"x": 32, "y": 24, "z": 1000, "height": 56, "width": 680, "tabOrder": 0},
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [{"properties": {"paragraphs": [{"textRuns": [{"value": "Executive Defect Health", "textStyle": {"fontFamily": "Segoe UI Semibold", "fontSize": "26px", "color": "#1F1F1F"}}], "horizontalTextAlignment": "left"}]}}]
+    },
+    "visualContainerObjects": {
+      "background": [{"properties": {"show": {"expr": {"Literal": {"Value": "false"}}}}}],
+      "border": [{"properties": {"show": {"expr": {"Literal": {"Value": "false"}}}}}],
+      "padding": [{"properties": {"top": {"expr": {"Literal": {"Value": "0D"}}}, "bottom": {"expr": {"Literal": {"Value": "0D"}}}, "left": {"expr": {"Literal": {"Value": "0D"}}}, "right": {"expr": {"Literal": {"Value": "0D"}}}}}]
+    }
+  }
+}

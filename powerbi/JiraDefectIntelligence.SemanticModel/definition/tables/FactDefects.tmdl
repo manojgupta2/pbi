@@ -12,6 +12,7 @@ table FactDefects
 	column ProjectCode
 		dataType: string
 		lineageTag: 221817c9-09c6-45e1-91ce-73c7c769c858
+		isHidden
 		summarizeBy: none
 		sourceColumn: ProjectCode
 
@@ -36,6 +37,7 @@ table FactDefects
 	column Priority
 		dataType: string
 		lineageTag: 636cba27-1fa6-44d1-8178-5793e023901d
+		isHidden
 		summarizeBy: none
 		sourceColumn: Priority
 
@@ -44,6 +46,7 @@ table FactDefects
 	column Status
 		dataType: string
 		lineageTag: c851e9d3-ee30-4c07-a7de-c5fcf182d89b
+		isHidden
 		summarizeBy: none
 		sourceColumn: Status
 
@@ -169,8 +172,19 @@ table FactDefects
 		annotation SummarizationSetBy = Automatic
 
 	measure 'Total Defects' = DISTINCTCOUNT(FactDefects[IssueKey])
+		formatString: #,0
+
 	measure 'Open Defects' = SUM(FactDefects[OpenFlag])
+		formatString: #,0
+
 	measure 'Closed Defects' = SUM(FactDefects[ClosedFlag])
+		formatString: #,0
+
+	measure 'Open SLA-breached Defects' = CALCULATE([Open Defects], FactDefects[SLABreached] = "Yes")
+		formatString: #,0
+
+	measure 'Customer Impacting Defects' = CALCULATE([Total Defects], FactDefects[CustomerImpact] = "Yes")
+		formatString: #,0
 
 	partition FactDefects = m
 		mode: import
