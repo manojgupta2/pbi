@@ -1,36 +1,11 @@
 {
+  "canvas": {"width": 1920, "height": 1080, "display_option": "FitToPage", "grid": "12 columns, 8px snap, 32px outer margin, 24px major gutter"},
+  "header_contract": {"x": 32, "y": 24, "width": 1856, "height": 64, "title_left": true, "navigation_y": 96, "navigation_height": 48, "content_starts_y": 168},
   "pages": [
-    {
-      "page_id": "p1_exec",
-      "title": "Executive Defect Health",
-      "purpose": "Leadership summary of backlog, risk, and trend direction",
-      "layout": "Top KPI row, large trend visual, right-side risk summary",
-      "slicers": ["Project", "Priority", "Status", "CreatedDate"],
-      "acceptance_criteria": "Page should answer: how large is the backlog, how much is open, and what is the trend."
-    },
-    {
-      "page_id": "p2_risk",
-      "title": "Backlog and SLA Risk",
-      "purpose": "Reveal risk concentration by priority, SLA breach, and customer impact",
-      "layout": "Two risk charts and one matrix or table",
-      "slicers": ["Project", "Priority", "CustomerImpact", "Status"],
-      "acceptance_criteria": "Page should highlight the highest-risk issues and populations needing intervention."
-    },
-    {
-      "page_id": "p3_trend",
-      "title": "Trend and Mix",
-      "purpose": "Show defect creation patterns and issue mix by priority and area",
-      "layout": "Line chart plus stacked or grouped mix chart",
-      "slicers": ["Project", "Priority", "Component", "Environment"],
-      "acceptance_criteria": "Page should show whether trend and mix are stable or deteriorating over time."
-    },
-    {
-      "page_id": "p4_detail",
-      "title": "Defect Detail",
-      "purpose": "Issue-level investigation and triage support",
-      "layout": "Full-page table with searchable fields",
-      "slicers": ["Project", "Priority", "Status", "Assignee"],
-      "acceptance_criteria": "Page should support operational drill-through without overwhelming the executive audience."
-    }
-  ]
+    {"id": "p1_overview", "title": "Retail Performance Overview", "archetype": "Executive Summary", "layout_variant": "B KPI-Strip", "slicers": ["DimDate[YearMonth]", "RetailSales[StoreName]", "RetailSales[Region]"], "visual_count": 8, "regions": {"kpis": [32,168,1856,128], "hero": [32,320,1216,440], "support": [1280,320,608,440], "footer": [32,792,1856,224]}},
+    {"id": "p2_store_category", "title": "Store and Category Performance", "archetype": "Comparative Benchmark", "layout_variant": "A Side-by-Side", "slicers": ["RetailSales[Region]", "RetailSales[StoreName]", "RetailSales[Category]"], "visual_count": 5, "regions": {"left": [32,320,912,440], "right": [976,320,912,440], "bottom": [32,792,1856,224]}},
+    {"id": "p3_trend_mix", "title": "Sales Trend and Mix", "archetype": "Analytical Canvas", "layout_variant": "B Inline-Slicers", "slicers": ["DimDate[YearMonth]", "RetailSales[PaymentMethod]", "RetailSales[OrderStatus]"], "visual_count": 5, "regions": {"hero": [32,320,1216,440], "support": [1280,320,608,440], "bottom": [32,792,1856,224]}},
+    {"id": "p4_order_detail", "title": "Order Detail", "archetype": "Operational Monitor", "layout_variant": "C Incident-First", "slicers": ["RetailSales[StoreName]", "RetailSales[Category]", "RetailSales[ProductName]", "RetailSales[OrderStatus]", "RetailSales[PaymentMethod]"], "visual_count": 2, "regions": {"summary": [32,320,1856,112], "table": [32,456,1856,560]}}
+  ],
+  "shared_rules": ["No overlapping data visuals", "All coordinates and sizes snap to 8px", "Titles and labels use human-readable display names", "Reading order follows header, navigation, left-to-right top-to-bottom visuals", "No decorative visuals are counted"]
 }

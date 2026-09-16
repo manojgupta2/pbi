@@ -1,36 +1,11 @@
 {
-  "theme_name": "Executive defect operations",
-  "base_theme": "Fluent 2 / neutral executive palette",
-  "color_palette": {
-    "primary": "#1F4E79",
-    "secondary": "#2F75B5",
-    "accent": "#D9EAF7",
-    "positive": "#2E7D32",
-    "warning": "#EDB200",
-    "critical": "#C00000",
-    "background": "#F5F7FA",
-    "surface": "#FFFFFF",
-    "text": "#1F1F1F"
-  },
-  "typography": {
-    "title": "Segoe UI Semibold",
-    "body": "Segoe UI",
-    "caption": "Segoe UI Semibold"
-  },
-  "kpi_style": {
-    "card_background": "surface",
-    "label_color": "text",
-    "value_color": "primary",
-    "border_radius": 12
-  },
-  "chart_style": {
-    "gridlines": "subtle",
-    "legend": "top",
-    "tooltips": "rich"
-  },
-  "principles": [
-    "Use a restrained executive palette with risk colors reserved for critical items.",
-    "Keep KPI cards aligned and consistently sized.",
-    "Prioritize readability over decorative charting."
-  ]
+  "status": "PASS",
+  "source_of_truth": "themes/0. Simplifica.json",
+  "source_palette": {"data_colors": ["#062F4F", "#7CBB00", "#0375B4", "#B82601", "#FFBB00", "#008F95", "#999895", "#945D60"], "background": "#FFFFFF", "foreground": "#062F4F", "table_accent": "#000000"},
+  "usage": {"primary": "#062F4F for titles, navigation active state, and primary measures", "secondary": "#0375B4 for comparison and trend series", "positive": "#7CBB00 for profit-positive or completed status only", "warning": "#FFBB00 for returned/order-risk emphasis only", "critical": "#B82601 for negative exception emphasis only", "neutral": "#999895 for secondary context"},
+  "typography": {"family": "Segoe UI", "title": "Segoe UI Semibold", "body": "Segoe UI", "kpi_value": "Segoe UI Semibold"},
+  "surfaces": {"page": "#FFFFFF", "visual_surface": "#FFFFFF", "section_divider": "#999895 at low opacity", "borders": "minimal; use whitespace first"},
+  "controls": {"slicers": "compact dropdown/tile controls in the reserved header band", "navigation": "horizontal below title, primary-color active state, neutral inactive state", "titles": "left aligned, sentence case, concise"},
+  "accessibility": ["Do not use color as the only status signal", "Maintain at least 4.5:1 body-text contrast and 3:1 mark contrast", "Set insight-based alt text", "Set tab order to match visual reading order", "Keep slicer targets at least 24px"],
+  "constraint": "Do not replace or invent a different theme; implementation may add only compatible Power BI defaults around this palette."
 }

@@ -1,0 +1,14 @@
+relationship RetailSales_OrderDate_DimDate_Date
+	fromColumn: RetailSales.OrderDate
+	toColumn: DimDate.Date
+
+relationship 152b9a66-493e-4dfb-ad20-a533cf8d6ec1
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimDate.Date
+	toColumn: LocalDateTable_d60c58a3-89fd-49b8-8889-5ba80db194f1.Date
+
+relationship 03a78306-1196-4d95-afa6-eb909cb2a71c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimDate.YearMonth
+	toColumn: LocalDateTable_4bdc05d1-64d2-4278-801c-8ec33a2f481e.Date
+

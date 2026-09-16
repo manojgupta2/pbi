@@ -1,0 +1,184 @@
+table RetailSales
+	lineageTag: 8361a6ef-f601-4b24-b508-6d6a019216c5
+
+	measure 'Total Sales' = SUM(RetailSales[SalesAmount])
+		formatString: #,##0.00
+		lineageTag: 53c2a46d-9ab8-4a90-a9de-3e0244a55958
+
+	measure 'Total Profit' = SUM(RetailSales[Profit])
+		formatString: #,##0.00
+		lineageTag: 2f7621b0-a40c-40ac-9e47-b976592f838e
+
+	measure 'Total Orders' = DISTINCTCOUNT(RetailSales[OrderID])
+		formatString: #,##0
+		lineageTag: 9f81381c-1b81-47a1-80a4-260d66261130
+
+	measure 'Units Sold' = SUM(RetailSales[Quantity])
+		formatString: #,##0
+		lineageTag: ad02f722-a5b9-4e09-a060-4580ca31d94b
+
+	measure 'Average Order Value' = DIVIDE([Total Sales], [Total Orders])
+		formatString: #,##0.00
+		lineageTag: 1c1b0ce0-ea7b-4969-a097-f90a7f121a05
+
+	measure 'Profit Margin' = DIVIDE([Total Profit], [Total Sales])
+		formatString: 0.0%
+		lineageTag: 0cdaef42-1d7b-455c-999d-30ad32a02f78
+
+	measure 'Returned Orders' = CALCULATE([Total Orders], RetailSales[OrderStatus] = "Returned")
+		formatString: #,##0
+		lineageTag: 418c62a3-7bab-4ffa-b2e2-0b1cf3e0afad
+
+	measure 'Return Rate' = DIVIDE([Returned Orders], [Total Orders])
+		formatString: 0.0%
+		lineageTag: a1e25783-d5c1-495b-95dc-738d141aab6c
+
+	column OrderID
+		dataType: string
+		lineageTag: 23dca7a9-92ce-4e3a-b59c-3c14bfbd36e5
+		summarizeBy: none
+		sourceColumn: OrderID
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderDate
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 07e424d4-807e-4512-939a-531ebb6894a6
+		summarizeBy: none
+		sourceColumn: OrderDate
+
+		annotation SummarizationSetBy = Automatic
+
+	column StoreCode
+		dataType: string
+		lineageTag: f76b7bdc-5f6c-4087-90f5-7232b051e313
+		summarizeBy: none
+		sourceColumn: StoreCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column StoreName
+		dataType: string
+		lineageTag: ae440713-8a55-424f-aefe-2fa28b4624d5
+		summarizeBy: none
+		sourceColumn: StoreName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		lineageTag: af37ca8b-ec78-4ee9-b50d-3ac27b4dda35
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductCode
+		dataType: string
+		lineageTag: 134d7e69-6bbc-4e13-89ac-03f64560bd5b
+		summarizeBy: none
+		sourceColumn: ProductCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductName
+		dataType: string
+		lineageTag: e4b26ad3-dbc0-4e62-ba85-a7308e3374bf
+		summarizeBy: none
+		sourceColumn: ProductName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Category
+		dataType: string
+		lineageTag: 0c0d7872-7aa4-488f-9d1a-86362020ef08
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerID
+		dataType: string
+		lineageTag: fbd797f8-2c15-4ce6-8c32-7779a3414dc1
+		summarizeBy: none
+		sourceColumn: CustomerID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: a2a184e6-d9ac-4e29-9952-57febed05505
+		summarizeBy: sum
+		sourceColumn: Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnitPrice
+		dataType: int64
+		formatString: 0
+		lineageTag: 62d8f44f-3464-411f-86f0-0f32f19c819b
+		summarizeBy: sum
+		sourceColumn: UnitPrice
+
+		annotation SummarizationSetBy = Automatic
+
+	column DiscountPct
+		dataType: int64
+		formatString: 0
+		lineageTag: e1f9e889-6cfc-4fa4-b075-530611629744
+		summarizeBy: sum
+		sourceColumn: DiscountPct
+
+		annotation SummarizationSetBy = Automatic
+
+	column SalesAmount
+		dataType: double
+		lineageTag: 0a732a2f-dfb7-4372-ad02-c5796bf6afe0
+		summarizeBy: sum
+		sourceColumn: SalesAmount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Profit
+		dataType: double
+		lineageTag: 1c6f5827-a15b-4d1e-b29a-6173da03b4d5
+		summarizeBy: sum
+		sourceColumn: Profit
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column PaymentMethod
+		dataType: string
+		lineageTag: 54caa532-bcc1-4da2-aa74-12ff9c69e0c6
+		summarizeBy: none
+		sourceColumn: PaymentMethod
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderStatus
+		dataType: string
+		lineageTag: 29e738eb-2672-4d83-8f89-402a709b82ad
+		summarizeBy: none
+		sourceColumn: OrderStatus
+
+		annotation SummarizationSetBy = Automatic
+
+	partition RetailSales = m
+		mode: import
+		source =
+				let
+				  Source = Excel.Workbook(File.Contents("C:\work\DQ\pbi\data\retail_store_test_data.xlsx"), null, true),
+				  #"Navigation 1" = Source{[Item = "RetailSales", Kind = "Sheet"]}[Data],
+				  #"Promoted headers" = Table.PromoteHeaders(#"Navigation 1", [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"OrderID", type text}, {"OrderDate", Int64.Type}, {"StoreCode", type text}, {"StoreName", type text}, {"Region", type text}, {"ProductCode", type text}, {"ProductName", type text}, {"Category", type text}, {"CustomerID", type text}, {"Quantity", Int64.Type}, {"UnitPrice", Int64.Type}, {"DiscountPct", Int64.Type}, {"SalesAmount", type number}, {"Profit", type number}, {"PaymentMethod", type text}, {"OrderStatus", type text}})
+				in
+				  #"Changed column type"
+
+	annotation PBI_ResultType = Table
+

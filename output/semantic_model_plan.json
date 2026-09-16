@@ -1,187 +1,28 @@
 {
-  "semantic_model_plan": {
-    "required_tables": [
-      {
-        "table": "FactDefects",
-        "purpose": "Issue-level defect fact",
-        "grain": "One row per IssueKey",
-        "key_columns": ["IssueKey"],
-        "columns": [
-          "IssueKey",
-          "ProjectCode",
-          "ProjectName",
-          "IssueType",
-          "Priority",
-          "Status",
-          "Summary",
-          "Component",
-          "Environment",
-          "CreatedDate",
-          "UpdatedDate",
-          "ResolvedDate",
-          "Assignee",
-          "Reporter",
-          "CustomerImpact",
-          "SLATargetDays",
-          "AgeDays",
-          "SLABreached",
-          "OpenFlag",
-          "ClosedFlag"
-        ],
-        "data_types": {
-          "IssueKey": "text",
-          "ProjectCode": "text",
-          "ProjectName": "text",
-          "IssueType": "text",
-          "Priority": "text",
-          "Status": "text",
-          "Summary": "text",
-          "Component": "text",
-          "Environment": "text",
-          "CreatedDate": "date",
-          "UpdatedDate": "date",
-          "ResolvedDate": "date",
-          "Assignee": "text",
-          "Reporter": "text",
-          "CustomerImpact": "text",
-          "SLATargetDays": "whole number",
-          "AgeDays": "whole number",
-          "SLABreached": "text",
-          "OpenFlag": "whole number",
-          "ClosedFlag": "whole number"
-        }
-      },
-      {
-        "table": "DimProject",
-        "purpose": "Project dimension",
-        "grain": "One row per ProjectCode",
-        "key_columns": ["ProjectCode"],
-        "columns": ["ProjectCode", "ProjectName", "Domain", "Region"],
-        "data_types": {
-          "ProjectCode": "text",
-          "ProjectName": "text",
-          "Domain": "text",
-          "Region": "text"
-        }
-      },
-      {
-        "table": "DimDate",
-        "purpose": "Calendar dimension",
-        "grain": "One row per Date",
-        "key_columns": ["Date"],
-        "columns": ["Date", "Year", "Quarter", "MonthNumber", "Month", "YearMonth", "WeekNumber", "DayOfWeek"],
-        "data_types": {
-          "Date": "date",
-          "Year": "whole number",
-          "Quarter": "text",
-          "MonthNumber": "whole number",
-          "Month": "text",
-          "YearMonth": "date",
-          "WeekNumber": "whole number",
-          "DayOfWeek": "text"
-        }
-      },
-      {
-        "table": "DimPriority",
-        "purpose": "Priority dimension",
-        "grain": "One row per Priority",
-        "key_columns": ["Priority"],
-        "columns": ["Priority", "SeverityRank", "SLATargetDays"],
-        "data_types": {
-          "Priority": "text",
-          "SeverityRank": "whole number",
-          "SLATargetDays": "whole number"
-        }
-      },
-      {
-        "table": "DimStatus",
-        "purpose": "Status dimension",
-        "grain": "One row per Status",
-        "key_columns": ["Status"],
-        "columns": ["Status", "IsOpen", "IsClosed"],
-        "data_types": {
-          "Status": "text",
-          "IsOpen": "whole number",
-          "IsClosed": "whole number"
-        }
-      },
-      {
-        "table": "ExpectedKPIs",
-        "purpose": "Benchmark / expected values table",
-        "grain": "One row per KPI metric",
-        "key_columns": ["Metric"],
-        "columns": ["Metric", "ExpectedValue"],
-        "data_types": {
-          "Metric": "text",
-          "ExpectedValue": "whole number"
-        }
-      },
-      {
-        "table": "MonthlyTrend",
-        "purpose": "Pre-aggregated monthly defect trend",
-        "grain": "One row per CreatedMonth + Priority",
-        "key_columns": ["CreatedMonth", "Priority"],
-        "columns": ["CreatedMonth", "Priority", "DefectCount"],
-        "data_types": {
-          "CreatedMonth": "date",
-          "Priority": "text",
-          "DefectCount": "whole number"
-        }
-      }
-    ],
-    "keys": {
-      "FactDefects": {"primary": "IssueKey", "distinct_count": 1203, "duplicate_rows": 0},
-      "DimProject": {"primary": "ProjectCode", "distinct_count": 5, "duplicate_rows": 0},
-      "DimDate": {"primary": "Date", "distinct_count": 330, "duplicate_rows": 0},
-      "DimPriority": {"primary": "Priority", "distinct_count": 4, "duplicate_rows": 0},
-      "DimStatus": {"primary": "Status", "distinct_count": 5, "duplicate_rows": 0},
-      "ExpectedKPIs": {"primary": "Metric", "distinct_count": 9, "duplicate_rows": 0},
-      "MonthlyTrend": {"primary": ["CreatedMonth", "Priority"], "distinct_count": 48, "duplicate_rows": 0}
-    },
-    "relationships": [
-      {"from": "FactDefects[ProjectCode]", "to": "DimProject[ProjectCode]", "cardinality": "many-to-one", "filter_direction": "single", "purpose": "Project lookup"},
-      {"from": "FactDefects[Priority]", "to": "DimPriority[Priority]", "cardinality": "many-to-one", "filter_direction": "single", "purpose": "Priority lookup"},
-      {"from": "FactDefects[Status]", "to": "DimStatus[Status]", "cardinality": "many-to-one", "filter_direction": "single", "purpose": "Status lookup"},
-      {"from": "FactDefects[CreatedDate]", "to": "DimDate[Date]", "cardinality": "many-to-one", "filter_direction": "single", "purpose": "Created-date analysis"},
-      {"from": "MonthlyTrend[Priority]", "to": "DimPriority[Priority]", "cardinality": "many-to-one", "filter_direction": "single", "purpose": "Trend priority lookup"}
-    ],
-    "date_model": {
-      "FactDefects": {
-        "CreatedDate": "real date",
-        "UpdatedDate": "real date",
-        "ResolvedDate": "real date"
-      },
-      "DimDate": {
-        "Date": "date",
-        "Year": "whole number",
-        "Quarter": "text",
-        "MonthNumber": "whole number",
-        "Month": "text",
-        "YearMonth": "date",
-        "WeekNumber": "whole number",
-        "DayOfWeek": "text"
-      },
-      "notes": [
-        "The model should use date semantics rather than integer serials.",
-        "If Desktop or TMDL metadata differs, it should be validated before implementation."
-      ]
-    },
-    "measures": [
-      {"name": "Total Defects", "definition": "DISTINCTCOUNT(FactDefects[IssueKey])", "source_fields": ["FactDefects[IssueKey]"], "format": "#,0"},
-      {"name": "Open Defects", "definition": "SUM(FactDefects[OpenFlag])", "source_fields": ["FactDefects[OpenFlag]"], "format": "#,0"},
-      {"name": "Closed Defects", "definition": "SUM(FactDefects[ClosedFlag])", "source_fields": ["FactDefects[ClosedFlag]"], "format": "#,0"},
-      {"name": "Open SLA-breached Defects", "definition": "CALCULATE([Open Defects], FactDefects[SLABreached] = \"Yes\")", "source_fields": ["FactDefects[OpenFlag]", "FactDefects[SLABreached]"], "format": "#,0", "assumption": "Requires stakeholder confirmation on exact business rule"},
-      {"name": "Customer Impacting Defects", "definition": "CALCULATE([Total Defects], FactDefects[CustomerImpact] = \"Yes\")", "source_fields": ["FactDefects[CustomerImpact]"], "format": "#,0", "assumption": "Potential may also be considered impact; confirm before using"}
-    ],
-    "technical_fields_to_hide": [
-      "FactDefects[Priority]",
-      "FactDefects[Status]",
-      "FactDefects[ProjectCode]"
-    ],
-    "assumptions": [
-      "IssueKey is unique in the source workbook.",
-      "ExpectedKPIs is treated as a benchmark table until stakeholder confirmation is received.",
-      "MonthlyTrend is a governed aggregate table and should not replace the issue-level fact."
-    ]
-  }
+  "status": "PASS_WITH_STAGE_1_PREREQUISITES",
+  "current_model": {"table": "RetailSales", "grain": "one row per OrderID", "rows_observed": 60, "candidate_key": "OrderID"},
+  "required_stage_1_changes": [
+    {"change": "Correct OrderDate to a Date/DateTime semantic type", "reason": "Source workbook values are datetime; current TMDL declares Int64", "approval": "required"},
+    {"change": "Create a DimDate table covering the observed OrderDate range", "fields": ["Date", "Year", "Quarter", "MonthNumber", "Month", "YearMonth"], "relationship": "DimDate[Date] 1:* RetailSales[OrderDate]", "approval": "required"},
+    {"change": "Create explicit measures", "measures": [
+      {"name": "Total Sales", "expression": "SUM(RetailSales[SalesAmount])", "format": "neutral numeric until currency is confirmed"},
+      {"name": "Total Profit", "expression": "SUM(RetailSales[Profit])", "format": "neutral numeric until currency is confirmed"},
+      {"name": "Total Orders", "expression": "DISTINCTCOUNT(RetailSales[OrderID])", "format": "#,0"},
+      {"name": "Units Sold", "expression": "SUM(RetailSales[Quantity])", "format": "#,0"},
+      {"name": "Average Order Value", "expression": "DIVIDE([Total Sales], [Total Orders])", "format": "neutral numeric until currency is confirmed"},
+      {"name": "Profit Margin", "expression": "DIVIDE([Total Profit], [Total Sales])", "format": "0.0%"},
+      {"name": "Returned Orders", "expression": "CALCULATE([Total Orders], RetailSales[OrderStatus] = \"Returned\")", "format": "#,0"},
+      {"name": "Return Rate", "expression": "DIVIDE([Returned Orders], [Total Orders])", "format": "0.0%"}
+    ], "approval": "required"}
+  ],
+  "candidate_dimensions_for_stage_1": [
+    {"table": "DimStore", "key": "StoreCode", "attributes": ["StoreName", "Region"], "rationale": "repeated store attributes support stable slicing"},
+    {"table": "DimProduct", "key": "ProductCode", "attributes": ["ProductName", "Category"], "rationale": "repeated product attributes support product/category analysis"}
+  ],
+  "relationships_if_dimensions_are_created": [
+    "RetailSales[StoreCode] many-to-one DimStore[StoreCode]",
+    "RetailSales[ProductCode] many-to-one DimProduct[ProductCode]",
+    "RetailSales[OrderDate] many-to-one DimDate[Date]"
+  ],
+  "do_not_do_in_stage_0": ["Do not edit the Int64 date type", "Do not add measures", "Do not add dimensions or relationships", "Do not infer returned-order accounting treatment", "Do not assign a currency symbol without confirmation"]
 }

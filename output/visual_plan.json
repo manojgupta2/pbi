@@ -1,83 +1,26 @@
 {
-  "visuals": [
-    {
-      "page": "p1_exec",
-      "visual_id": "kpi_total",
-      "visual_type": "Card",
-      "title": "Total Defects",
-      "measure": "Total Defects",
-      "position": "Top-left KPI card",
-      "purpose": "Current defect volume",
-      "acceptance_criteria": "Matches distinct IssueKey count from source."
-    },
-    {
-      "page": "p1_exec",
-      "visual_id": "kpi_open",
-      "visual_type": "Card",
-      "title": "Open Defects",
-      "measure": "Open Defects",
-      "position": "Top-center KPI card",
-      "purpose": "Current backlog",
-      "acceptance_criteria": "Matches SUM(OpenFlag) source logic."
-    },
-    {
-      "page": "p1_exec",
-      "visual_id": "kpi_closed",
-      "visual_type": "Card",
-      "title": "Closed Defects",
-      "measure": "Closed Defects",
-      "position": "Top-right KPI card",
-      "purpose": "Resolved volume",
-      "acceptance_criteria": "Matches SUM(ClosedFlag) source logic."
-    },
-    {
-      "page": "p1_exec",
-      "visual_id": "trend_monthly",
-      "visual_type": "Line chart",
-      "title": "Defects Created by Month",
-      "x_axis": "DimDate[Date]",
-      "y_axis": "Total Defects",
-      "purpose": "Track defect creation trend",
-      "acceptance_criteria": "Linked to monthly trend with no double counting."
-    },
-    {
-      "page": "p2_risk",
-      "visual_id": "risk_priority",
-      "visual_type": "Bar chart",
-      "title": "Open Defects by Priority",
-      "x_axis": "DimPriority[Priority]",
-      "y_axis": "Open Defects",
-      "purpose": "Show risk concentration by priority",
-      "acceptance_criteria": "Priority distribution aligns with issue counts."
-    },
-    {
-      "page": "p2_risk",
-      "visual_id": "risk_sla",
-      "visual_type": "Bar chart",
-      "title": "SLA Breach Exposure",
-      "x_axis": "FactDefects[SLABreached]",
-      "y_axis": "Open Defects",
-      "purpose": "Expose SLA breach risk",
-      "acceptance_criteria": "Counts reflect Yes/No values in the source data."
-    },
-    {
-      "page": "p3_trend",
-      "visual_id": "mix_priority",
-      "visual_type": "Stacked bar",
-      "title": "Defect Mix by Priority",
-      "x_axis": "DimPriority[Priority]",
-      "y_axis": "Total Defects",
-      "purpose": "Show priority mix across the backlog",
-      "acceptance_criteria": "Matches source distribution by priority."
-    },
-    {
-      "page": "p4_detail",
-      "visual_id": "detail_table",
-      "visual_type": "Table",
-      "title": "Defect Detail",
-      "fields": ["IssueKey", "ProjectName", "Priority", "Status", "Summary", "Assignee", "AgeDays", "CustomerImpact", "SLABreached"],
-      "purpose": "Operational investigation and triage",
-      "acceptance_criteria": "Shows issue rows without duplication and supports filtering."
-    }
-  ]
+  "status": "PASS",
+  "visual_contracts": [
+    {"page": "p1_overview", "id": "kpi_sales", "type": "cardVisual", "title": "Total Sales", "fields": ["measure: Total Sales"], "position": [32,168,440,128], "formatting": "Simplifica primary value; neutral currency/number until confirmed"},
+    {"page": "p1_overview", "id": "kpi_profit", "type": "cardVisual", "title": "Total Profit", "fields": ["measure: Total Profit"], "position": [504,168,440,128], "formatting": "Simplifica positive color only when profit is positive"},
+    {"page": "p1_overview", "id": "kpi_orders", "type": "cardVisual", "title": "Total Orders", "fields": ["measure: Total Orders"], "position": [976,168,440,128], "formatting": "whole-number display"},
+    {"page": "p1_overview", "id": "kpi_return_rate", "type": "cardVisual", "title": "Return Rate", "fields": ["measure: Return Rate"], "position": [1448,168,440,128], "formatting": "percentage display; pair with Returned label, not color alone"},
+    {"page": "p1_overview", "id": "sales_trend", "type": "lineChart", "title": "Sales and Profit by Month", "fields": ["axis: DimDate[YearMonth]", "values: Total Sales, Total Profit"], "position": [32,320,1216,440], "sorting": "YearMonth ascending", "filters": ["exclude blank date"], "formatting": "two clearly labeled series; no dual axis; subtle gridlines"},
+    {"page": "p1_overview", "id": "store_sales", "type": "barChart", "title": "Sales by Store", "fields": ["category: RetailSales[StoreName]", "value: Total Sales"], "position": [1280,320,608,208], "sorting": "Total Sales descending", "formatting": "horizontal sorted bars"},
+    {"page": "p1_overview", "id": "category_profit", "type": "barChart", "title": "Profit by Category", "fields": ["category: RetailSales[Category]", "value: Total Profit"], "position": [1280,552,608,208], "sorting": "Total Profit descending", "formatting": "horizontal sorted bars"},
+    {"page": "p1_overview", "id": "status_mix", "type": "columnChart", "title": "Orders by Status", "fields": ["axis: RetailSales[OrderStatus]", "value: Total Orders"], "position": [32,792,896,224], "sorting": "Total Orders descending", "formatting": "labels enabled; status text retained"},
+    {"page": "p2_store_category", "id": "store_sales_profit", "type": "clusteredBarChart", "title": "Sales and Profit by Store", "fields": ["category: RetailSales[StoreName]", "values: Total Sales, Total Profit"], "position": [32,320,912,440], "sorting": "Total Sales descending", "formatting": "separate same-unit series only if currency confirmed; otherwise use Sales chart plus profit table"},
+    {"page": "p2_store_category", "id": "category_sales", "type": "barChart", "title": "Sales by Category", "fields": ["category: RetailSales[Category]", "value: Total Sales"], "position": [976,320,912,208], "sorting": "Total Sales descending", "formatting": "sorted horizontal bars"},
+    {"page": "p2_store_category", "id": "product_sales", "type": "barChart", "title": "Top Products by Sales", "fields": ["category: RetailSales[ProductName]", "value: Total Sales"], "position": [976,552,912,208], "sorting": "Total Sales descending", "formatting": "Top 8; labels enabled"},
+    {"page": "p2_store_category", "id": "store_orders", "type": "tableEx", "title": "Store Scorecard", "fields": ["RetailSales[StoreName]", "Total Orders", "Total Sales", "Total Profit", "Profit Margin", "Return Rate"], "position": [32,792,912,224], "sorting": "Total Sales descending", "formatting": "banded rows; human-readable measure names"},
+    {"page": "p2_store_category", "id": "category_margin", "type": "barChart", "title": "Profit Margin by Category", "fields": ["category: RetailSales[Category]", "value: Profit Margin"], "position": [976,792,912,224], "sorting": "Profit Margin descending", "formatting": "percentage labels"},
+    {"page": "p3_trend_mix", "id": "monthly_sales", "type": "lineChart", "title": "Monthly Sales", "fields": ["axis: DimDate[YearMonth]", "value: Total Sales"], "position": [32,320,1216,440], "sorting": "YearMonth ascending", "formatting": "continuous monthly axis"},
+    {"page": "p3_trend_mix", "id": "monthly_orders", "type": "columnChart", "title": "Monthly Orders", "fields": ["axis: DimDate[YearMonth]", "value: Total Orders"], "position": [1280,320,608,208], "sorting": "YearMonth ascending", "formatting": "labels enabled"},
+    {"page": "p3_trend_mix", "id": "payment_mix", "type": "barChart", "title": "Orders by Payment Method", "fields": ["category: RetailSales[PaymentMethod]", "value: Total Orders"], "position": [1280,552,608,208], "sorting": "Total Orders descending", "formatting": "sorted bars"},
+    {"page": "p3_trend_mix", "id": "status_mix_trend", "type": "stackedColumnChart", "title": "Monthly Orders by Status", "fields": ["axis: DimDate[YearMonth]", "legend: RetailSales[OrderStatus]", "value: Total Orders"], "position": [32,792,896,224], "sorting": "YearMonth ascending", "formatting": "status labels and legend; color is not sole signal"},
+    {"page": "p3_trend_mix", "id": "category_mix", "type": "hundredPercentStackedBarChart", "title": "Sales Mix by Category", "fields": ["category: RetailSales[Category]", "value: Total Sales"], "position": [960,792,928,224], "sorting": "Total Sales descending", "formatting": "use only if composition question remains distinct after review"},
+    {"page": "p4_order_detail", "id": "detail_summary", "type": "cardVisual", "title": "Filtered Orders", "fields": ["measure: Total Orders", "measure: Total Sales", "measure: Total Profit"], "position": [32,320,1856,112], "formatting": "compact multi-value card; neutral currency/number until confirmed"},
+    {"page": "p4_order_detail", "id": "order_table", "type": "tableEx", "title": "Order Detail", "fields": ["RetailSales[OrderID]", "RetailSales[OrderDate]", "RetailSales[StoreName]", "RetailSales[Region]", "RetailSales[ProductName]", "RetailSales[Category]", "RetailSales[CustomerID]", "RetailSales[Quantity]", "RetailSales[SalesAmount]", "RetailSales[Profit]", "RetailSales[PaymentMethod]", "RetailSales[OrderStatus]"], "position": [32,456,1856,560], "sorting": "OrderDate descending, then OrderID ascending", "formatting": "searchable/filterable table; no duplicated rows; human-readable display names"}
+  ],
+  "notes": ["Do not create a visual using an unsupported date relationship until Stage 1 fixes OrderDate and adds DimDate.", "Do not add a currency symbol until the business currency is confirmed."]
 }

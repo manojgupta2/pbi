@@ -1,63 +1,62 @@
 {
-  "target_audience": [
-    "Engineering leadership",
-    "QA leads",
-    "Project managers",
-    "Defect triage owners"
+  "status": "PASS",
+  "report_name": "Retail Store Performance",
+  "source_project": "powerbi/Retail Store.pbip",
+  "scope": "Stage 0 planning only; no PBIR, TMDL, or theme implementation",
+  "data_model_assessment": {
+    "confirmed": [
+      "One imported table named RetailSales is present.",
+      "The workbook contains 60 rows and OrderID is unique across all 60 rows.",
+      "The observed row grain is one order per row; there is no confirmed order-line grain.",
+      "OrderDate spans 2026-01-01 through 2026-05-28 with 50 distinct dates.",
+      "StoreName has 3 values, Region 2, ProductName 8, Category 4, CustomerID 10, PaymentMethod 3, and OrderStatus 2.",
+      "All observed source columns are complete with no nulls."
+    ],
+    "current_gaps": [
+      "No model relationships are defined.",
+      "No explicit measures are defined.",
+      "OrderDate is currently typed as Int64 in TMDL although the source workbook exposes datetime values; this must be resolved in Stage 1.",
+      "No date dimension or dedicated store/product dimensions are present."
+    ],
+    "unknowns": [
+      "Business currency is UNKNOWN; use a neutral currency/number format until confirmed.",
+      "The meaning of Returned is UNKNOWN beyond the source status value; do not infer whether sales/profit should be reversed.",
+      "The discount field's unit is UNKNOWN beyond integer values 0, 5, and 10; validate whether it represents percent points."
+    ]
+  },
+  "proposed_pages": [
+    {"id": "p1_overview", "title": "Retail Performance Overview", "purpose": "Leadership scan of sales, profit, order volume, return rate, store contribution, and recent trend."},
+    {"id": "p2_store_category", "title": "Store and Category Performance", "purpose": "Compare store, region, category, and product contribution to identify performance concentration."},
+    {"id": "p3_trend_mix", "title": "Sales Trend and Mix", "purpose": "Analyze monthly sales/profit movement and the mix of completed versus returned orders and payment methods."},
+    {"id": "p4_order_detail", "title": "Order Detail", "purpose": "Provide a filterable order-level operational view for investigation."}
   ],
-  "business_questions": [
-    "How large is the current defect backlog?",
-    "How many defects are open versus closed?",
-    "Which priorities and statuses are driving risk?",
-    "Which projects are contributing most defects?",
-    "How many defects breach SLA and impact customers?",
-    "What is the monthly creation trend?",
-    "Which defects need immediate triage?"
+  "navigation": {
+    "pattern": "horizontal top navigation",
+    "placement": "below the page title/header and above the analytical canvas",
+    "items": ["Overview", "Store & Category", "Trend & Mix", "Order Detail"],
+    "consistency": "same order, dimensions, typography, active-state treatment, and spacing on every page",
+    "interaction": "page navigation buttons or tabs; active page uses Simplifica primary color and inactive pages use neutral text"
+  },
+  "theme_strategy": "Use themes/0. Simplifica.json as the required source of truth in Stage 2. Do not replace it with the current Fluent base theme. Preserve its palette and white background, then add only implementation-safe text, visual, slicer, and navigation defaults needed by the approved design contract.",
+  "validation_plan": {
+    "static": ["Parse every output JSON artifact", "Confirm every visual id is unique", "Confirm every position is within 1920x1080 and uses 8px-aligned coordinates", "Confirm no visual overlaps within a page", "Confirm every field binding exists in the Stage 1 model contract"],
+    "pbir": ["Run powerbi-report-author validate against the .Report directory after each Stage 2/3 logical batch", "Review warnings as well as failures"],
+    "desktop": ["Open/reload the PBIP in Power BI Desktop", "Refresh and verify no model errors", "Capture screenshots for all four pages"],
+    "render": ["Review desktop screenshots at FitToPage and a narrow viewport", "Check navigation, slicers, clipping, labels, contrast, and table readability"],
+    "final_qa": ["Reconcile Total Orders, Total Sales, Total Profit, Units Sold, and Returned Orders to source workbook calculations", "Confirm return-rate and profit-margin formulas", "Confirm no currency assumption was introduced"]
+  },
+  "hitl_checkpoints": [
+    "Approve the interpretation of one row per OrderID and the OrderDate type correction before Stage 1.",
+    "Confirm business currency and whether Returned orders remain included in sales/profit totals.",
+    "Approve the four-page structure, top navigation, and Simplifica theme usage before Stage 2.",
+    "Review the first rendered desktop screenshots before final QA."
   ],
-  "pages": [
-    {
-      "page_id": "p1_exec",
-      "title": "Executive Defect Health",
-      "purpose": "Executive summary of backlog, risk, trend, and priority concentration",
-      "navigation": "Default landing page",
-      "slicers": ["Project", "Priority", "Status", "CreatedDate"],
-      "visual_strategy": "Priority KPI cards and a single trend line"
-    },
-    {
-      "page_id": "p2_risk",
-      "title": "Backlog and SLA Risk",
-      "purpose": "Focus on exposure, aging, and customer-impact risk",
-      "navigation": "Next page from executive",
-      "slicers": ["Project", "Priority", "CustomerImpact", "Status"],
-      "visual_strategy": "Bar chart for open defects by priority and SLA exposure"
-    },
-    {
-      "page_id": "p3_trend",
-      "title": "Trend and Mix",
-      "purpose": "Track creation patterns and defect mix over time",
-      "navigation": "Next page from risk",
-      "slicers": ["Project", "Priority", "Component", "Environment"],
-      "visual_strategy": "Time trend and mix composition"
-    },
-    {
-      "page_id": "p4_detail",
-      "title": "Defect Detail",
-      "purpose": "Operational drill-down and issue-level investigation",
-      "navigation": "Last page",
-      "slicers": ["Project", "Priority", "Status", "Assignee"],
-      "visual_strategy": "Detailed issue table with drill-through"
-    }
-  ],
-  "drillthrough": [
-    {
-      "from": "p1_exec",
-      "to": "p4_detail",
-      "filters": ["Project", "Priority", "Status"]
-    }
-  ],
-  "tooltip_strategy": [
-    "Use tooltips only for issue count, project concentration, and risk details where drill-through is not necessary."
-  ],
-  "visual_strategy": "Keep the report executive-first: KPI cards, trend, risk exceptions, comparison, and a single detail table. Avoid generic charts for every categorical field.",
-  "design_rule": "Do not create a chart for every available column. Prioritize executive KPIs, trends, risk exceptions, and actionable comparisons."
+  "technical_acceptance_criteria": [
+    "Stage 0 artifacts describe the actual Retail Store model, not the prior defect model.",
+    "No PBIP, PBIR, TMDL, or theme files are modified in Stage 0.",
+    "All planned fields and measures are either observed in the current model or explicitly marked as Stage 1 additions.",
+    "Every planned visual has a page, purpose, type, binding, filters/sorting where relevant, and in-bounds layout coordinates.",
+    "The required Simplifica theme is preserved as the source of truth.",
+    "Unknown business semantics are recorded as UNKNOWN rather than guessed."
+  ]
 }

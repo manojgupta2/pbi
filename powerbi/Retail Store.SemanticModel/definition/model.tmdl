@@ -1,0 +1,23 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["RetailSales","DimDate"]
+
+annotation PBI_ProTooling = ["DevMode","MCP-PBIModeling"]
+
+ref table RetailSales
+ref table DimDate
+ref table DateTableTemplate_5c97477b-4383-4fe9-b236-5995e86c68d7
+ref table LocalDateTable_d60c58a3-89fd-49b8-8889-5ba80db194f1
+ref table LocalDateTable_4bdc05d1-64d2-4278-801c-8ec33a2f481e
+
+ref cultureInfo en-US
+
